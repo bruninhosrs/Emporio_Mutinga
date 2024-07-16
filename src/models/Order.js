@@ -2,6 +2,7 @@ const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 const User = require('./User');
 const Product = require('./Product'); 
+const router = require('../Rotas/pedidoRotas');
 
 class Order extends Model {}
 

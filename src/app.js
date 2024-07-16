@@ -2,14 +2,14 @@ const express = require('express');
 const app = express();
 const userRoutes = require('./Rotas/usuarioRotas'); // Rotas criadas com CRUD basico
 const productRoutes = require('./Rotas/produtoRotas'); // Rotas criadas com CRUD basico
-//const orderRoutes = require('./Rotas/pedidoRotas'); // Rotas criadas com CRUD basico
+const orderRoutes = require('./Rotas/pedidoRotas'); // Rotas criadas com CRUD basico
 
 app.use(express.json()); // Para analisar JSON no corpo da requisição
 
 // Criação de rotas, usuarios, pedidos e produtos
 app.use('/users', userRoutes);
 app.use('/products', productRoutes);
-//app.use('/users', orderRoutes);
+app.use('/orders', orderRoutes);
 
 
 const port = 3000;
@@ -22,12 +22,11 @@ const port = 3000;
 
 // TESTES PARA CRIAÇÃO DE TABELAS NO BANCO DE DADOS
 
+// Sincroniza todos os modelos com o banco de dados
 const sequelize = require('./config/database'); // essa linha de código importa o Sequelize configurado no projeto na pasta 'src/config/database.js'
 const User = require('./models/User'); // importa o modelo 'User' definido usando o Sequelize. nesse modelo representa uma tabela no banco de dados. pasta 'src/models/User.js'
-const Product = require('./models/Product'); // (VAZIA) importa o modelo 'Product' definido usando o Sequelize. nesse modelo representa uma tabela no banco de dados. pasta 'src/models/Product.js'
-//const Order = require('./models/Order'); // (VAZIA) importa o modelo 'Order' definido usando o Sequelize. nesse modelo representa uma tabela no banco de dados. pasta 'src/models/Order.js'
-
-// Sincroniza todos os modelos com o banco de dados
+const Product = require('./models/Product'); // importa o modelo 'Product' definido usando o Sequelize. nesse modelo representa uma tabela no banco de dados. pasta 'src/models/Product.js'
+const Order = require('./models/Order'); // importa o modelo 'Order' definido usando o Sequelize. nesse modelo representa uma tabela no banco de dados. pasta 'src/models/Order.js'
 
 //User
 sequelize.showAllSchemas().then((schemas) => {
@@ -63,7 +62,7 @@ sequelize.showAllSchemas().then((schemas) => {
   }
 });
 
-/*Order
+//Order
 sequelize.showAllSchemas().then((schemas) => {
   if (schemas.includes('order')) { 
     console.log('A tabela já existe');
@@ -78,4 +77,3 @@ sequelize.showAllSchemas().then((schemas) => {
       });
   }
 });
-*/
