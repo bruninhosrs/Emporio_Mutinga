@@ -2,7 +2,7 @@ const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 const User = require('./User');
 const Product = require('./Product'); 
-const router = require('../Rotas/pedidoRotas');
+//const router = require('../Rotas/pedidoRotas');
 
 class Order extends Model {}
 
@@ -19,8 +19,15 @@ Order.init({
     status: {
         type: DataTypes.STRING,
         allowNull: false,
-        defaultValue: 'pending' // Exemplo de valores: pending, completed, cancelled
+        defaultValue: 'pendente', // Valor padrão continua sendo 'pendente'
+        validate: {
+            isIn: {
+                args: [['pendente', 'concluída', 'cancelada',]],
+                msg: "Status do pedido não encontrado!" // Mensagem personalizada para erros de validação
+            }
+        }
     }
+    
 }, {
     sequelize,
     modelName: 'order',

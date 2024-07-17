@@ -1,20 +1,30 @@
-// src/routes/userRoutes.js
 const express = require('express');
 const router = express.Router();
-const User = require('../models/User'); // Ajuste o caminho conforme sua estrutura
-
-// Definir rotas
-router.get('/', (req, res) => {
-  res.send('List of users');
-});
+const User = require('../models/User'); 
+const authUtils = require('../utils/auth');
 
 // CREATE: Adicionar um novo usuário
-router.post('/', async (req, res) => {
+router.post('/register', async (req, res) => {
   try {
-    const newUser = await User.create(req.body);
-    res.status(201).json(newUser);
+    const hashedPassword = await authUtils.hashPassword(req.body.password);
+    const newUser = await User.create({ ...req.body, password: hashedPassword });
+    res.status(201).json({ userId: newUser.id, username: newUser.username });
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(500).send(error.message);
+  }
+});
+
+// Login de usuário
+router.post('/login', async (req, res) => {
+  try {
+    const user = await User.findOne({ where: { username: req.body.username } });
+    if (!user || !(await authUtils.comparePassword(req.body.password, user.password))) {
+      return res.status(401).send('Authentication failed');
+    }
+    const token = authUtils.generateToken(user);
+    res.json({ token });
+  } catch (error) {
+    res.status(500).send(error.message);
   }
 });
 

@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const Order = require('../models/Order'); // Ajuste o caminho conforme necessário
+const Order = require('../models/Order'); 
 
 // Listar todos os pedidos
 router.get('/', async (req, res) => {
@@ -29,27 +29,33 @@ router.get('/:id', async (req, res) => {
 // Criar um novo pedido
 router.post('/', async (req, res) => {
   try {
-    const newOrder = await Order.create(req.body);
-    res.status(201).json(newOrder);
+      const newOrder = await Order.create(req.body);
+      res.status(201).json(newOrder);
   } catch (error) {
-    res.status(400).send(error.message);
+      if (error.name === 'SequelizeValidationError') {
+          return res.status(400).json({ message: error.errors.map(e => e.message) });
+      }
+      res.status(500).send(error.message);
   }
 });
 
 // Atualizar um pedido
 router.put('/:id', async (req, res) => {
   try {
-    const updated = await Order.update(req.body, {
-      where: { id: req.params.id }
-    });
-    if (updated[0] > 0) {
-      const updatedOrder = await Order.findByPk(req.params.id);
-      res.json(updatedOrder);
-    } else {
-      res.status(404).send('Order not found');
-    }
+      const updated = await Order.update(req.body, {
+          where: { id: req.params.id }
+      });
+      if (updated[0] > 0) {
+          const updatedOrder = await Order.findByPk(req.params.id);
+          res.json(updatedOrder);
+      } else {
+          res.status(404).send('Pedido não encontrado!');
+      }
   } catch (error) {
-    res.status(500).send(error.message);
+      if (error.name === 'SequelizeValidationError') {
+          return res.status(400).json({ message: error.errors.map(e => e.message) });
+      }
+      res.status(500).send(error.message);
   }
 });
 

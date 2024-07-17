@@ -1,6 +1,6 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
-const router = require('../Rotas/usuarioRotas');
+//const router = require('../Rotas/usuarioRotas');
 
 class User extends Model {}
 
