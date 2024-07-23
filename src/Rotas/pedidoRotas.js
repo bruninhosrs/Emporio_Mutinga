@@ -1,78 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const Order = require('../models/Order'); 
+const OrderController = require('../controllers/OrderController');
 
-// Listar todos os pedidos
-router.get('/', async (req, res) => {
-  try {
-    const orders = await Order.findAll();
-    res.json(orders);
-  } catch (error) {
-    res.status(500).send(error.message);
-  }
-});
-
-// Obter um pedido pelo ID
-router.get('/:id', async (req, res) => {
-  try {
-    const order = await Order.findByPk(req.params.id);
-    if (order) {
-      res.json(order);
-    } else {
-      res.status(404).send('Order not found');
-    }
-  } catch (error) {
-    res.status(500).send(error.message);
-  }
-});
-
-// Criar um novo pedido
-router.post('/', async (req, res) => {
-  try {
-      const newOrder = await Order.create(req.body);
-      res.status(201).json(newOrder);
-  } catch (error) {
-      if (error.name === 'SequelizeValidationError') {
-          return res.status(400).json({ message: error.errors.map(e => e.message) });
-      }
-      res.status(500).send(error.message);
-  }
-});
-
-// Atualizar um pedido
-router.put('/:id', async (req, res) => {
-  try {
-      const updated = await Order.update(req.body, {
-          where: { id: req.params.id }
-      });
-      if (updated[0] > 0) {
-          const updatedOrder = await Order.findByPk(req.params.id);
-          res.json(updatedOrder);
-      } else {
-          res.status(404).send('Pedido não encontrado!');
-      }
-  } catch (error) {
-      if (error.name === 'SequelizeValidationError') {
-          return res.status(400).json({ message: error.errors.map(e => e.message) });
-      }
-      res.status(500).send(error.message);
-  }
-});
-
-// Deletar um pedido
-router.delete('/:id', async (req, res) => {
-  try {
-    const deleted = await Order.destroy({
-      where: { id: req.params.id }
-    });
-    if (deleted) {
-      res.status(204).send('Order deleted');
-    } else {
-      res.status(404).send('Order not found');
-    }
-  } catch (error) {
-    res.status(500).send(error.message);
-  }
-});
+// Rotas para operações com pedidos
+router.get('/', OrderController.listAllOrder);
+router.post('/', OrderController.createOrder);
+router.put('/:id', OrderController.updateOrder);
+router.delete('/:id', OrderController.deleteOrder);
 
 module.exports = router;

@@ -1,3 +1,4 @@
+// Arquivo para proteger as rotas!
 const jwt = require('jsonwebtoken');
 const secretKey = 'your_secret_key_here';
 

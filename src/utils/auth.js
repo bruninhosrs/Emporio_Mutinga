@@ -1,3 +1,4 @@
+// Arquivo usado apenas os login de usuário!
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
@@ -20,3 +21,8 @@ exports.comparePassword = async (password, hash) => {
   return await bcrypt.compare(password, hash);
 };
 // Esta função verifica se a senha fornecida, quando hasheada, corresponde ao hash armazenado.
+
+// utils/auth.js
+exports.validateEmail = (email) => {
+  return /\S+@\S+\.\S+/.test(email);
+};
