@@ -7,6 +7,7 @@ class Product extends Model {}
 Product.init({
     name: {
         type: DataTypes.STRING,
+        unique: true,
         allowNull: false
     },
     price: {
