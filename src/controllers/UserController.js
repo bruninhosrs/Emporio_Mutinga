@@ -27,11 +27,12 @@ exports.createUser = async (req, res) => {
   }
 };
 
+// Area de Login
 exports.login = async (req, res) => {
   try {
     const user = await User.findOne({ where: { username: req.body.username } });
     if (!user || !(await authUtils.comparePassword(req.body.password, user.password))) {
-      return res.status(401).send('Authentication failed');
+      return res.status(401).send('Autenticação falhou!');
     }
     const token = authUtils.generateToken(user);
     res.json({ token });
