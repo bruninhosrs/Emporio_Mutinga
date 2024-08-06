@@ -42,7 +42,7 @@ exports.deleteProduct = async (req, res) => {
     const { id } = req.params;
     const deleted = await Product.destroy({ where: { id } });
     if (deleted) {
-      res.status(204).send("Produto deletado com sucesso!");
+      res.status(200).send("Produto deletado com sucesso!");
     } else {
       res.status(404).send("Produto não encontrado!");
     }
