@@ -11,5 +11,6 @@ router.get('/', ProductController.listAllProducts);
 router.post('/', ProductController.createProduct);
 router.put('/:id', ProductController.updateProduct);
 router.delete('/:id', ProductController.deleteProduct);
+router.get('/search', ProductController.searchProducts); // Rota para pesquisa de produtos
 
 module.exports = router;

@@ -1,4 +1,5 @@
 const Product = require('../models/Product');
+const { Op } = require('sequelize'); // Importe Op para usar operadores
 
 // Lista todos os produtos
 exports.listAllProducts = async (req, res) => {
@@ -48,5 +49,24 @@ exports.deleteProduct = async (req, res) => {
     }
   } catch (error) {
     res.status(500).send(error.message);
+  }
+};
+
+// Função de busca pelo nome, código de barras ou categoria do produto
+exports.searchProducts = async (req, res) => {
+  try {
+      const { search } = req.query; // Recebe o termo de busca da query string
+      const products = await Product.findAll({
+          where: {
+              [Op.or]: [
+                  { name: { [Op.like]: `%${search}%` } }, // Busca por nome
+                  { barcode: { [Op.eq]: search } }, // Busca por código de barras
+                  { category: { [Op.like]: `%${search}%` } } // Busca por categoria
+              ]
+          }
+      });
+      res.json(products); // Retorna a lista de produtos encontrados
+  } catch (error) {
+      res.status(500).send(error.message);
   }
 };

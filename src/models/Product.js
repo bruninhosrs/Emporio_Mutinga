@@ -21,11 +21,20 @@ Product.init({
     description: {
         type: DataTypes.TEXT,
         allowNull: true
+    },
+    barcode: {
+        type: DataTypes.STRING,  // Adicione esta linha
+        unique: true,            // Garante que o código de barras seja único
+        allowNull: true          // Pode ser nulo, se não todos os produtos precisam de um código de barras
+    },
+    category: {
+        type: DataTypes.STRING,  // Adicione esta linha
+        allowNull: true          // Pode ser nulo, se categorias não são obrigatórias
     }
 }, {
     sequelize,
     modelName: 'product',
-    timestamps: false  // opcional, dependendo se você quer ou não campos de timestamps
+    timestamps: false
 });
 
 module.exports = Product;

@@ -5,5 +5,6 @@ const SaleController = require('../controllers/SaleController');
 
 router.post('/', SaleController.createSale);
 router.get('/', SaleController.listSales);
+router.get('/receipt/:id', SaleController.generateReceipt);
 
 module.exports = router;
