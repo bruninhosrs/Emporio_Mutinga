@@ -20,7 +20,7 @@ exports.createUser = async (req, res) => {
       username: req.body.username,
       email: req.body.email,
       password: hashedPassword,
-      role: 'atendente' // Aqui ele define no autoámtico que a função do usuário é 'ATENDENTE'
+      role: req.body.role
     });
 
     res.status(201).json({ message: "Usuário registrado com sucesso!", userId: newUser.id });

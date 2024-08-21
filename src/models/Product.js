@@ -23,12 +23,12 @@ Product.init({
         allowNull: true
     },
     barcode: {
-        type: DataTypes.STRING,  // Adicione esta linha
+        type: DataTypes.STRING,  
         unique: true,            // Garante que o código de barras seja único
         allowNull: true          // Pode ser nulo, se não todos os produtos precisam de um código de barras
     },
     category: {
-        type: DataTypes.STRING,  // Adicione esta linha
+        type: DataTypes.STRING,  
         allowNull: true          // Pode ser nulo, se categorias não são obrigatórias
     }
 }, {

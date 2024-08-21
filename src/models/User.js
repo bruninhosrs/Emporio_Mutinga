@@ -25,7 +25,7 @@ User.init({
   },
   role:{
     type:DataTypes.STRING,
-    defaultValue:'ATENDENTE'
+    allowNull: false
   }
   
 }, {

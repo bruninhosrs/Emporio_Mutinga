@@ -1,11 +1,12 @@
 const express = require('express');
 const router = express.Router();
+const { authenticateToken, authorizeRole } = require('../middleware/authenticateToken');
 const OrderController = require('../controllers/OrderController');
 
 // Rotas para operações com pedidos
 router.get('/', OrderController.listAllOrder);
-router.post('/', OrderController.createOrder);
-router.put('/:id', OrderController.updateOrder);
-router.delete('/:id', OrderController.deleteOrder);
+router.post('/', authenticateToken, authorizeRole(['sub-gerente', 'gerente', 'super-admin']), OrderController.createOrder);
+router.put('/:id', authenticateToken, authorizeRole(['sub-gerente', 'gerente', 'super-admin']), OrderController.updateOrder);
+router.delete('/:id', authenticateToken, authorizeRole(['sub-gerente', 'gerente', 'super-admin']), OrderController.deleteOrder);
 
 module.exports = router;

@@ -17,9 +17,15 @@ const authenticateToken = (req, res, next) => {
 // Verifica se o usuário tem uma das funções para acessar a rota
 const authorizeRole = (roles) => {
   return (req, res, next) => {
-      if (!roles.includes(req.user.role))
-          return res.status(403).send('Você não tem permissão para acessar este recurso');
-      next(); // Se o usuário tem a função necessária, prossegue para a próxima função no pipeline
+    console.log('Token Role:', req.user.role);
+    console.log('Allowed Roles:', roles);
+    const roleNormalized = req.user.role.toLowerCase();
+    const rolesNormalized = roles.map(role => role.toLowerCase());
+
+    if (!rolesNormalized.includes(roleNormalized)) {
+      return res.status(403).send('Acesso negado. Permissão insuficiente.');
+    }
+    next();
   };
 };
 
