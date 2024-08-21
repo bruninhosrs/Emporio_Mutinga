@@ -19,14 +19,26 @@ const authorizeRole = (roles) => {
   return (req, res, next) => {
     console.log('Token Role:', req.user.role);
     console.log('Allowed Roles:', roles);
-    const roleNormalized = req.user.role.toLowerCase();
-    const rolesNormalized = roles.map(role => role.toLowerCase());
-
-    if (!rolesNormalized.includes(roleNormalized)) {
+    if (!roles.includes(req.user.role)) {
       return res.status(403).send('Acesso negado. Permissão insuficiente.');
     }
     next();
   };
 };
+
+
+// const authorizeRole = (roles) => {
+//   return (req, res, next) => {
+//     console.log('Função do Token:', req.user.role);
+//     console.log('Funções permitidas:', roles);
+//     const roleNormalized = req.user.role.toLowerCase();
+//     const rolesNormalized = roles.map(role => role.toLowerCase());
+
+//     if (!rolesNormalized.includes(roleNormalized)) {
+//       return res.status(403).send('Acesso negado. Permissão insuficiente.');
+//     }
+//     next();
+//   };
+// };
 
 module.exports = { authenticateToken, authorizeRole };
