@@ -1,6 +1,9 @@
 //Vendas de Caixa
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
+const User = require('./User');
+const Product = require('./Product');
+const CashRegister = require('./CashRegister');
 
 class Sale extends Model {}
 
@@ -35,5 +38,14 @@ Sale.init({
     sequelize,
     modelName: 'sale'
 });
+
+// Relacionamentos
+Sale.belongsTo(User, {foreignKey: 'userId', as: 'User'});  // Relaciona Sale com User
+Sale.belongsTo(Product, {foreignKey: 'productId', as: 'Product'});  // Relaciona Sale com Product
+Sale.belongsTo(CashRegister, {foreignKey: 'cashierId', as: 'CashRegister'});  // Relaciona Sale com CashRegister
+
+// Sale.belongsTo(Product, { as: 'Product' });
+// Sale.belongsTo(User, { as: 'User' });
+// Sale.belongsTo(CashRegister, { as: 'CashRegister' });
 
 module.exports = Sale;

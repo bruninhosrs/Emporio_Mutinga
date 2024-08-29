@@ -1,6 +1,5 @@
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
-//const router = require('../Rotas/produtoRotas');
 
 class Product extends Model {}
 
@@ -11,7 +10,7 @@ Product.init({
         allowNull: false
     },
     price: {
-        type: DataTypes.FLOAT,
+        type: DataTypes.DECIMAL(10, 2),
         allowNull: false
     },
     stock: {
