@@ -34,7 +34,7 @@ const syncTable = async (model, tableName) => {
         console.log(`A tabela ${tableName} já existe.`);
     } else {
         try {
-            await sequelize.sync({ force: false });  //alter: true -> para acrescentar novos atributos nas tabelas
+            await sequelize.sync({ force: false });  //alter: true -> para acrescentar novos atributos nas tabelas / force: false
             console.log(`Tabelas criadas com sucesso.`);
         } catch (error) {
             console.error(`Erro ao criar tabelas: ${error}`);
