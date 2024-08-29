@@ -12,6 +12,15 @@ exports.createSale = async (req, res) => {
         const product = await Product.findByPk(productId);
         if (!product) return res.status(404).send('Produto não encontrado!');
 
+        // Verifica tem estoque do produto
+        if (product.stock < quantity) {
+            return res.status(400).send('Estoque insuficiente');
+        }
+
+        // Atualiza o estoque do produto
+        product.stock -= quantity;
+        await product.save();
+
         const totalPrice = (product.price * quantity) - discount; // Calcula o preço total com desconto
         const sale = await Sale.create({
             userId,
@@ -68,7 +77,7 @@ exports.generateReceipt = async (req, res) => {
         doc.fontSize(12).text(`Código de Barras: ${sale.Product.barcode}`, 50, 250);
         doc.fontSize(12).text(`Produto: ${sale.Product.name}`, 50, 300);
         doc.text(`Quantidade: ${sale.quantity}`, 50, 350);
-        doc.text(`Total: ${parseFloat(sale.totalPrice).toFixed(2)}`, 50, 400); // Converte para float antes de usar toFixed
+        doc.text(`Total: R$ ${parseFloat(sale.totalPrice).toFixed(2)}`, 50, 400); // Converte para float antes de usar toFixed
 
         doc.end();
     } catch (error) {
