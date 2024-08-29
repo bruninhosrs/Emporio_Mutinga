@@ -63,12 +63,12 @@ exports.generateReceipt = async (req, res) => {
         doc.pipe(res);
         doc.fontSize(27).text('Recibo de Venda', 200, 50);// x -> qunto menor for, ele fica pra esquerda & // y -> quanto menor for, ele fica pra cima
         doc.fontSize(12).text(`ID da Venda: ${sale.id}`, 50, 100);
-        doc.fontSize(12).text(`Caixa: ${sale.CashRegister.id} - ${sale.CashRegister.location}`, 50, 100);
-        //doc.fontSize(12).text(`Vendedor: ${sale.User.username}`, 50, 100);
-        //doc.fontSize(12).text(`Código de Barras: ${sale.Product.barcode}`, 50, 100);
-        //doc.fontSize(12).text(`Produto: ${sale.Product.name}`, 50, 100);
-        //doc.fontSize(12).text(`Quantidade: ${sale.quantity}`, 50, 100);
-        //doc.fontSize(12).text(`Total: ${parseFloat(sale.totalPrice).toFixed(2)}`, 50, 100); // Converte para float antes de usar toFixed
+        doc.fontSize(12).text(`Caixa: ${sale.CashRegister.id} - ${sale.CashRegister.location}`, 50, 150);
+        doc.fontSize(12).text(`Vendedor: ${sale.User.username}`, 50, 200);
+        doc.fontSize(12).text(`Código de Barras: ${sale.Product.barcode}`, 50, 250);
+        doc.fontSize(12).text(`Produto: ${sale.Product.name}`, 50, 300);
+        doc.text(`Quantidade: ${sale.quantity}`, 50, 350);
+        doc.text(`Total: ${parseFloat(sale.totalPrice).toFixed(2)}`, 50, 400); // Converte para float antes de usar toFixed
 
         doc.end();
     } catch (error) {
