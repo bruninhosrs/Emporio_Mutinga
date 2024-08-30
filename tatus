@@ -1,0 +1,120 @@
+[33mcommit 86ab4b9f05717573e25a2f23b1eb38b0a80cfa0c[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m
+Author: bruninhosrs <brunorodrigues398@gmail.com>
+Date:   Thu Aug 22 19:00:41 2024 -0300
+
+    Alterações nos usuários e permissão de acessos part. 3
+
+[33mcommit e4031f09a0bc82411f57992d410caa69b04b7873[m
+Author: bruninhosrs <brunorodrigues398@gmail.com>
+Date:   Wed Aug 21 19:56:19 2024 -0300
+
+    Alterações nos usuários e permissão de acessos part. 2
+
+[33mcommit c59cb7a52af55fe0e59c52cddca8810a84fd5c4b[m
+Author: bruninhosrs <brunorodrigues398@gmail.com>
+Date:   Wed Aug 21 17:22:37 2024 -0300
+
+    Alterações nos usuários e permissão de acessos
+
+[33mcommit 4401801092272457a6ba5607b55d56017935a7e7[m
+Author: bruninhosrs <brunorodrigues398@gmail.com>
+Date:   Thu Aug 15 11:37:50 2024 -0300
+
+    Criação correta do arquivo '.env' e elaboração de senha dos usuários
+
+[33mcommit b906579fb398b9b6632801955f238284a97613e8[m
+Author: bruninhosrs <brunorodrigues398@gmail.com>
+Date:   Tue Aug 13 15:12:26 2024 -0300
+
+    Criação de senha
+
+[33mcommit 44212b9877f5fac522d0e4101c882233b96202d5[m
+Author: bruninhosrs <brunorodrigues398@gmail.com>
+Date:   Tue Aug 6 20:26:54 2024 -0300
+
+    Emissão de nota em PDF, feita algumas alterações no Controladores: SaleController, ProductController; Alterações nas Rotas do Produto; Alterações no Modelo Product e também das bibliotecas
+
+[33mcommit ff2ae917fed3fe307feb5c56d75b830999fac852[m
+Author: bruninhosrs <brunorodrigues398@gmail.com>
+Date:   Tue Aug 6 16:36:23 2024 -0300
+
+    Gestão de Caixa e Vendas
+
+[33mcommit ab2dfa63c4ff1258c44592b5e80a33ab173eaf14[m
+Author: bruninhosrs <brunorodrigues398@gmail.com>
+Date:   Wed Jul 31 17:12:28 2024 -0300
+
+    Implementação dos campos: Fornecedor e Cliente
+
+[33mcommit af039be361746361f7c37ce3992eae66496d3368[m
+Author: Lanchester <pedrororocha@gmail.com>
+Date:   Wed Jul 24 18:30:18 2024 -0300
+
+    Revisitado questões do banco
+
+[33mcommit a596af91bd16fea338f6f27f0ebefc468ff7a600[m
+Merge: db1b1a0 8e9d633
+Author: Lanchester <pedrororocha@gmail.com>
+Date:   Wed Jul 24 14:54:31 2024 -0300
+
+    Atualização da base do PC, com da base do Bruno
+
+[33mcommit db1b1a07acb37ad3cb99ee5c42eb0c3298bbd4ff[m
+Author: Lanchester <pedrororocha@gmail.com>
+Date:   Wed Jul 24 14:45:59 2024 -0300
+
+    Adicionando arquivos não rastreados
+
+[33mcommit 8e9d633905ae6b6b3d35c2e55900dc86d297c39c[m
+Author: bruninhosrs <brunorodrigues398@gmail.com>
+Date:   Tue Jul 23 19:15:47 2024 -0300
+
+    Arquivos de testes ajustes nos arquivos Controladores
+
+[33mcommit 9bbedfd0b5d71addf22c29578ff60b1c5a1f2f62[m
+Author: bruninhosrs <brunorodrigues398@gmail.com>
+Date:   Wed Jul 17 19:14:19 2024 -0300
+
+    Foram feitas atualizações nos arquivos app, pasta models e pasta Rotas. Token funcionando, mas foi feito apenas um teste
+
+[33mcommit c0f36e08f6c9a31e5efa97e08827d67bdfd6d939[m
+Author: bruninhosrs <brunorodrigues398@gmail.com>
+Date:   Tue Jul 16 17:51:02 2024 -0300
+
+    Criação dos Modelos e Definição de Rotas: Produtos e Pedidos
+
+[33mcommit abe71aea1ab21420deb165cedfcea7db3ad6060e[m
+Author: bruninhosrs <brunorodrigues398@gmail.com>
+Date:   Tue Jul 16 13:51:15 2024 -0300
+
+    Criação dos Modelos e Definição de Rotas: Produtos e Pedidos
+
+[33mcommit c9e4498b5bb1a019eec3e297fc92f773b3866260[m
+Author: bruninhosrs <brunorodrigues398@gmail.com>
+Date:   Mon Jul 15 18:56:29 2024 -0300
+
+    Mudanças no testes para criação de tabelas no BD
+
+[33mcommit 2bde73f01c69423d4a21c7e3d2c4fdea7989fbc0[m
+Author: bruninhosrs <brunorodrigues398@gmail.com>
+Date:   Thu Jul 11 16:35:34 2024 -0300
+
+    Teste rodado já com criação de classe User
+
+[33mcommit f1579f29a5f7672270cfbcc4699cf2b85c7051a5[m
+Author: bruninhosrs <brunorodrigues398@gmail.com>
+Date:   Thu Jul 4 18:30:22 2024 -0300
+
+    Foi acrescentado a conexão do servidor Express e feito as rotas dos: usuario, produto e pedido
+
+[33mcommit 903ce3aa4d9dc2d0fbcbdb0e43538cadafd7464b[m
+Author: Lanchester <pedrororocha@gmail.com>
+Date:   Thu Jul 4 18:02:01 2024 -0300
+
+    Initial commit: Setup project structure
+
+[33mcommit 89d8cdd818db406b3a955feefd7bdda1ef4e356c[m
+Author: bruninhosrs <brunorodrigues398@gmail.com>
+Date:   Thu Jul 4 13:35:14 2024 -0300
+
+    Initial commit: Setup project structure
