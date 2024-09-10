@@ -2,6 +2,7 @@ require('dotenv').config();
 const express = require('express');
 const app = express();
 const sequelize = require('./config/database');
+const cors = require('cors');
 const User = require('./models/User');
 const Product = require('./models/Product');
 const Order = require('./models/Order');
@@ -10,7 +11,7 @@ const Client = require('./models/Client');
 const CashRegister = require('./models/CashRegister');
 const Sale = require('./models/Sales');
 
-
+app.use(cors());
 app.use(express.json()); // Para analisar JSON no corpo da requisição
 
 
