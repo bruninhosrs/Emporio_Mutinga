@@ -5,37 +5,42 @@ import axios from 'axios';
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
 
-  const handleLogin = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:3001/users/login', { username, password });
-      alert('Login bem-sucedido!');
+      const response = await axios.post('http://localhost:3000/users/login', {
+        username,
+        password,
+      });
+      console.log('Login bem-sucedido:', response.data);
+      // Redirecionar ou armazenar o token
     } catch (error) {
       console.error('Erro ao fazer login:', error);
-      alert('Erro ao fazer login');
+      setError('Falha ao realizar login, por favor, verifique suas credenciais.');
     }
   };
 
   return (
     <div>
-      <h2>Login</h2>
-      <form onSubmit={handleLogin}>
-        <input
-         type="text" 
-         placeholder="Username" 
-         value={username} onChange={(e) => 
-         setUsername(e.target.value)} />
-
+      <h1>Login</h1>
+      <form onSubmit={handleSubmit}>
         <input 
-        type="password" 
-        placeholder="Password" 
-        value={password} onChange={(e) => 
-        setPassword(e.target.value)} />
-
-        <button type="submit">Entrar</button>
-
+          type="text" 
+          placeholder="Username" 
+          value={username} 
+          onChange={(e) => setUsername(e.target.value)} 
+        />
+        <input 
+          type="password" 
+          placeholder="Password" 
+          value={password} 
+          onChange={(e) => setPassword(e.target.value)} 
+        />
+        <button type="submit">Login</button>
       </form>
+      {error && <p style={{ color: 'red' }}>{error}</p>}
     </div>
   );
 }
