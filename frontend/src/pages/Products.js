@@ -36,7 +36,7 @@ function Products() {
           {products.map(product => (
             <tr key={product.id}>
               <td>{product.name}</td>
-              <td>{product.price.toFixed(2)}</td>
+              <td>{!isNaN(product.price) ? Number(product.price).toFixed(2) : 'Preço inválido'}</td> {/* Verifica se price é um número */}
               <td>{product.stock}</td>
               <td>
                 <button className="edit-button">Editar</button>
