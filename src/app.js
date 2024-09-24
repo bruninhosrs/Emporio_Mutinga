@@ -11,7 +11,12 @@ const Client = require('./models/Client');
 const CashRegister = require('./models/CashRegister');
 const Sale = require('./models/Sales');
 
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:3001', // Origem permitida (onde o frontend está rodando)
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos permitidos
+    allowedHeaders: ['Authorization', 'Content-Type'] // Headers permitidos
+  }));
+  
 app.use(express.json()); // Para analisar JSON no corpo da requisição
 
 

@@ -9,5 +9,6 @@ router.post('/', authenticateToken, authorizeRole(['sub-gerente', 'gerente', 'su
 router.put('/:id', authenticateToken, authorizeRole(['sub-gerente', 'gerente', 'super-admin']), ProductController.updateProduct);
 router.delete('/:id', authenticateToken, authorizeRole(['sub-gerente', 'gerente', 'super-admin']), ProductController.deleteProduct);
 router.get('/search', ProductController.searchProducts); // Rota para pesquisa de produtos
+router.get('/:id', ProductController.getProductById);
 
 module.exports = router;

@@ -11,6 +11,20 @@ exports.listAllProducts = async (req, res) => {
   }
 };
 
+// Busca um produto pelo ID
+exports.getProductById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const product = await Product.findByPk(id);
+    if (!product) {
+      return res.status(404).send('Produto não encontrado!');
+    }
+    res.json(product);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
+
 // Cria um novo produto
 exports.createProduct = async (req, res) => {
   try {
