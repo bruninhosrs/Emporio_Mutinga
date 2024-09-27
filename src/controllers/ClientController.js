@@ -1,5 +1,30 @@
 const Client = require('../models/Client');
 
+// Lista todos os usuários
+exports.listAllClients = async (req, res) => {
+    try {
+      const client = await Client.findAll();
+      res.json(client);
+    } catch (error) {
+      res.status(500).send(error.message);
+    }
+  };
+
+// Busca um cliente pelo ID
+exports.getClientById = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const client = await Client.findByPk(id);
+      if (!client) {
+        return res.status(404).send('Cliente não encontrado!');
+      }
+      res.json(client);
+    } catch (error) {
+      res.status(500).send(`Erro ao buscar cliente: ${error.message}`);
+    }
+  };
+
+// Criar um cliente
 exports.createClient = async (req, res) => {
     try {
         const client = await Client.create(req.body);
@@ -9,6 +34,21 @@ exports.createClient = async (req, res) => {
     }
 };
 
+// Busca um cliente pelo ID
+exports.getClientById = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const client = await Client.findByPk(id);
+      if (!client) {
+        return res.status(404).send('Cliente não encontrado!');
+      }
+      res.json(client);
+    } catch (error) {
+      res.status(500).send(`Erro ao buscar cliente: ${error.message}`);
+    }
+  };
+
+  // Alterar um cliente
 exports.updateClient = async (req, res) => {
     try {
         const { id } = req.params;
@@ -24,6 +64,7 @@ exports.updateClient = async (req, res) => {
     }
 };
 
+// Deletar um cliente
 exports.deleteClient = async (req, res) => {
     try {
         const { id } = req.params;

@@ -8,5 +8,6 @@ router.post('/', authenticateToken, authorizeRole(['sub-gerente', 'gerente', 'su
 router.put('/:id', authenticateToken, authorizeRole(['sub-gerente', 'gerente', 'super-admin']), SupplierController.updateSupplier);
 router.delete('/:id', authenticateToken, authorizeRole(['sub-gerente', 'gerente', 'super-admin']), SupplierController.deleteSupplier);
 router.get('/', SupplierController.listAllSuppliers);
+router.get('/:id', SupplierController.getSupplierById);
 
 module.exports = router;

@@ -1,5 +1,19 @@
 const Supplier = require('../models/Supplier');
 
+// Busca um fornecedor pelo ID
+exports.getSupplierById = async (req, res) => {
+    try {
+      const { id } = req.params;
+      const supplier = await Supplier.findByPk(id);
+      if (!supplier) {
+        return res.status(404).send('Fornecedor não encontrado!');
+      }
+      res.json(supplier);
+    } catch (error) {
+      res.status(500).send(`Erro ao buscar fornecedor: ${error.message}`);
+    }
+  };
+
 exports.createSupplier = async (req, res) => {
     try {
         const supplier = await Supplier.create(req.body);

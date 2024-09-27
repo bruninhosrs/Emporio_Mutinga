@@ -33,26 +33,54 @@ app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });
 
-// Função para verificar e sincronizar tabela
-const syncTable = async (model, tableName) => {
-    const schemas = await sequelize.showAllSchemas();
-    if (schemas.includes(tableName)) {
-        console.log(`A tabela ${tableName} já existe.`);
-    } else {
+// Função de re-tentativa
+const retryTransaction = async (operation, retries = 3) => {
+    while (retries) {
         try {
-            await sequelize.sync({ force: false });  //alter: true -> para acrescentar novos atributos nas tabelas / force: false
-            console.log(`Tabelas criadas com sucesso.`);
+            return await operation(); // Tenta executar a operação passada
         } catch (error) {
-            console.error(`Erro ao criar tabelas: ${error}`);
+            if (error.name === 'SequelizeDatabaseError' && error.message.includes('Deadlock')) {
+                retries -= 1; // Reduz a quantidade de tentativas
+                console.warn('Deadlock detected, retrying transaction...', retries, 'retries left');
+            } else {
+                throw error; // Se não for deadlock, lança o erro
+            }
         }
+    }
+    throw new Error('A transação falhou após novas tentativas');
+};
+
+// Função para verificar e sincronizar as tabelas
+const syncTables = async () => {
+    try {
+        await retryTransaction(() => sequelize.sync({ alter: true })); // Usando a lógica de re-tentativa
+        console.log('Todas as tabelas foram sincronizadas com sucesso.');
+    } catch (error) {
+        console.error('Erro ao sincronizar tabelas:', error);
     }
 };
 
+// Função para verificar e sincronizar tabela
+// const syncTable = async (model, tableName) => {
+//     const schemas = await sequelize.showAllSchemas();
+//     if (schemas.includes(tableName)) {
+//         console.log(`A tabela ${tableName} já existe.`);
+//     } else {
+//         try {
+//             await sequelize.sync({ alter: true });  
+//             console.log(`Tabelas criadas com sucesso.`);
+//         } catch (error) {
+//             console.error(`Erro ao criar tabelas: ${error}`);
+//         }
+//     }
+// };
+
 // Sincronizar tabelas
-syncTable(User, 'users');
-syncTable(Product, 'products');
-syncTable(Order, 'orders');
-syncTable(Supplier, 'supplier');
-syncTable(Client, 'client');
-syncTable(CashRegister, 'cashRegister');
-syncTable(Sale, 'sale');
+syncTables();
+// syncTable(User, 'users');
+// syncTable(Product, 'products');
+// syncTable(Order, 'orders');
+// syncTable(Supplier, 'supplier');
+// syncTable(Client, 'client');
+// syncTable(CashRegister, 'cashRegister');
+// syncTable(Sale, 'sale');
