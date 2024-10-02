@@ -8,7 +8,8 @@ const fs = require('fs');
 
 exports.createSale = async (req, res) => {
     try {
-        const { userId, cashierId, productId, quantity, discount } = req.body;
+        const { userId, registerNumber, productId, quantity, discount } = req.body;
+        
         const product = await Product.findByPk(productId);
         if (!product) return res.status(404).send('Produto não encontrado!');
 
@@ -24,7 +25,7 @@ exports.createSale = async (req, res) => {
         const totalPrice = (product.price * quantity) - discount; // Calcula o preço total com desconto
         const sale = await Sale.create({
             userId,
-            cashierId,
+            registerNumber,
             productId,
             quantity,
             discount,
@@ -72,7 +73,7 @@ exports.generateReceipt = async (req, res) => {
         doc.pipe(res);
         doc.fontSize(27).text('Recibo de Venda', 200, 50);// x -> qunto menor for, ele fica pra esquerda & // y -> quanto menor for, ele fica pra cima
         doc.fontSize(12).text(`ID da Venda: ${sale.id}`, 50, 100);
-        doc.fontSize(12).text(`Caixa: ${sale.CashRegister.id} - ${sale.CashRegister.location}`, 50, 150);
+        doc.fontSize(12).text(`Caixa: ${sale.registerNumber.id} - ${sale.registerNumber.location}`, 50, 150);
         doc.fontSize(12).text(`Vendedor: ${sale.User.username}`, 50, 200);
         doc.fontSize(12).text(`Código de Barras: ${sale.Product.barcode}`, 50, 250);
         doc.fontSize(12).text(`Produto: ${sale.Product.name}`, 50, 300);

@@ -60,27 +60,5 @@ const syncTables = async () => {
     }
 };
 
-// Função para verificar e sincronizar tabela
-// const syncTable = async (model, tableName) => {
-//     const schemas = await sequelize.showAllSchemas();
-//     if (schemas.includes(tableName)) {
-//         console.log(`A tabela ${tableName} já existe.`);
-//     } else {
-//         try {
-//             await sequelize.sync({ alter: true });  
-//             console.log(`Tabelas criadas com sucesso.`);
-//         } catch (error) {
-//             console.error(`Erro ao criar tabelas: ${error}`);
-//         }
-//     }
-// };
-
 // Sincronizar tabelas
 syncTables();
-// syncTable(User, 'users');
-// syncTable(Product, 'products');
-// syncTable(Order, 'orders');
-// syncTable(Supplier, 'supplier');
-// syncTable(Client, 'client');
-// syncTable(CashRegister, 'cashRegister');
-// syncTable(Sale, 'sale');

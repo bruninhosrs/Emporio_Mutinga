@@ -12,7 +12,7 @@ Sale.init({
         type: DataTypes.INTEGER,
         allowNull: false
     },
-    cashierId: {
+    registerNumber: {
         type: DataTypes.INTEGER,
         allowNull: false
     },
@@ -42,7 +42,7 @@ Sale.init({
 // Relacionamentos
 Sale.belongsTo(User, {foreignKey: 'userId', as: 'User'});  // Relaciona Sale com User
 Sale.belongsTo(Product, {foreignKey: 'productId', as: 'Product'});  // Relaciona Sale com Product
-Sale.belongsTo(CashRegister, {foreignKey: 'cashierId', as: 'CashRegister'});  // Relaciona Sale com CashRegister
+Sale.belongsTo(CashRegister, { foreignKey: 'registerNumber', targetKey: 'registerNumber', as: 'CashRegister' });  // Relaciona Sale com CashRegister
 
 // Sale.belongsTo(Product, { as: 'Product' });
 // Sale.belongsTo(User, { as: 'User' });
