@@ -103,16 +103,16 @@ exports.getSalesByMethod = async (req, res) => {
 
         sales.forEach(sale => {
             switch (sale.paymentMethod) {
-                case 'cash':
+                case 'dinheiro':
                     totalCashSales += parseFloat(sale.totalPrice);
                     break;
                 case 'pix':
                     totalPixSales += parseFloat(sale.totalPrice);
                     break;
-                case 'debit':
+                case 'debito':
                     totalDebitSales += parseFloat(sale.totalPrice);
                     break;
-                case 'credit':
+                case 'credito':
                     totalCreditSales += parseFloat(sale.totalPrice);
                     break;
                 case 'voucher':
