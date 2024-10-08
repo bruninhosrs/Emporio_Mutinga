@@ -1,130 +1,136 @@
 // Funções de Caixa
 const CashRegister = require('../models/CashRegister');
+const Sale = require ('../models/Sales');
 
-// Abre um novo caixa
+// Lista todos os usuários
+exports.listAllCash = async (req, res) => {
+  try {
+    const cashregister = await CashRegister.findAll();
+    res.json(cashregister);
+  } catch (error) {
+    res.status(500).send(error.message);
+  }
+};
+
+// Sangria de Caixa (retirada de dinheiro)
+exports.withdrawFromCashRegister = async (req, res) => {
+  try {
+      const { registerNumber, withdrawalAmount } = req.body;
+
+      const cashRegister = await CashRegister.findOne({ where: { registerNumber, status: 'aberto' } });
+      if (!cashRegister) {
+          return res.status(404).send('Caixa não encontrado ou já fechado.');
+      }
+
+      // Verifica se a sangria é possível (se há saldo suficiente)
+      if (cashRegister.openingBalance < withdrawalAmount) {
+          return res.status(400).send('Saldo insuficiente para a sangria.');
+      }
+
+      // Atualiza o valor total das sangrias e o saldo de abertura
+      cashRegister.totalWithdrawals += withdrawalAmount;
+      cashRegister.openingBalance -= withdrawalAmount;
+
+      await cashRegister.save();
+      res.status(200).json({ message: 'Sangria realizada com sucesso', cashRegister });
+  } catch (error) {
+      res.status(500).send('Erro ao realizar sangria: ' + error.message);
+  }
+};
+
+// Abertura de Caixa
 exports.openCashRegister = async (req, res) => {
-    try {
-      const { registerNumber, storeId, openingBalance } = req.body;
-  
-      // Verificar se já existe um caixa aberto com o mesmo número de caixa
-      const openCashRegister = await CashRegister.findOne({ where: { registerNumber, storeId, status: 'aberto' } });
-      if (openCashRegister) {
-        return res.status(400).json({ message: `Já existe um caixa aberto para o número ${registerNumber}.` });
-      }
-  
-      // Criar novo caixa
-      const newCashRegister = await CashRegister.create({ registerNumber, storeId, openingBalance });
+  try {
+      const { registerNumber, openingBalance } = req.body;
+      const newCashRegister = await CashRegister.create({
+          registerNumber,
+          openingBalance,
+          status: 'aberto'
+      });
       res.status(201).json(newCashRegister);
-    } catch (error) {
-      res.status(500).send(`Erro ao abrir caixa: ${error.message}`);
-    }
-  };
+  } catch (error) {
+      res.status(500).send('Erro ao abrir caixa: ' + error.message);
+  }
+};
 
-// Fecha o caixa
+// Fechamento de Caixa
 exports.closeCashRegister = async (req, res) => {
-    try {
-      const { registerNumber } = req.params;
-      const { closingBalance } = req.body;
-  
-      // Verificar se há um caixa aberto com o número de caixa específico
-      const openCashRegister = await CashRegister.findOne({ where: { registerNumber, status: 'aberto' } });
-      if (!openCashRegister) {
-        return res.status(400).json({ message: `Não há caixa aberto para o número ${registerNumber}.` });
+  try {
+      const { registerNumber, closingBalance } = req.body;
+      const cashRegister = await CashRegister.findOne({ where: { registerNumber, status: 'aberto' } });
+      if (!cashRegister) {
+          return res.status(404).send('Caixa não encontrado ou já fechado.');
       }
-  
-      // Fechar o caixa
-      openCashRegister.closingBalance = closingBalance;
-      openCashRegister.status = 'fechado';
-      openCashRegister.closedAt = new Date();
-      await openCashRegister.save();
-  
-      res.status(200).json(openCashRegister);
-    } catch (error) {
-      res.status(500).send(`Erro ao fechar caixa: ${error.message}`);
-    }
-  };
-  
-  // Adiciona uma entrada no caixa
-exports.addEntry = async (req, res) => {
-    try {
-      const { registerNumber } = req.params;
-      const { amount } = req.body;
-  
-      // Verificar se há um caixa aberto com o número de caixa
-      const openCashRegister = await CashRegister.findOne({ where: { registerNumber, status: 'aberto' } });
-      if (!openCashRegister) {
-        return res.status(400).json({ message: `Não há caixa aberto para o número ${registerNumber}.` });
-      }
-  
-      // Adicionar o valor ao saldo do caixa
-      openCashRegister.openingBalance += parseFloat(amount);
-      await openCashRegister.save();
-  
-      res.status(200).json(openCashRegister);
-    } catch (error) {
-      res.status(500).send(`Erro ao adicionar entrada: ${error.message}`);
-    }
-  };
-  
-  // Adiciona uma saída no caixa
-  exports.addExit = async (req, res) => {
-    try {
-      const { registerNumber } = req.params;
-      const { amount } = req.body;
-  
-      // Verificar se há um caixa aberto com o número de caixa
-      const openCashRegister = await CashRegister.findOne({ where: { registerNumber, status: 'aberto' } });
-      if (!openCashRegister) {
-        return res.status(400).json({ message: `Não há caixa aberto para o número ${registerNumber}.` });
-      }
-  
-      // Subtrair o valor do saldo do caixa
-      openCashRegister.openingBalance -= parseFloat(amount);
-      await openCashRegister.save();
-  
-      res.status(200).json(openCashRegister);
-    } catch (error) {
-      res.status(500).send(`Erro ao registrar saída: ${error.message}`);
-    }
-  };
-  
-  // Verifica o saldo do caixa
-exports.getBalance = async (req, res) => {
-    try {
-      const { registerNumber } = req.params;
-  
-      // Verificar se há um caixa aberto com o número de caixa
-      const openCashRegister = await CashRegister.findOne({ where: { registerNumber, status: 'aberto' } });
-      if (!openCashRegister) {
-        return res.status(400).json({ message: `Não há caixa aberto para o número ${registerNumber}.` });
-      }
-  
-      res.status(200).json({ balance: openCashRegister.openingBalance });
-    } catch (error) {
-      res.status(500).send(`Erro ao buscar saldo: ${error.message}`);
-    }
-  };
 
-  // Registrar sangria de caixa
-exports.cashOut = async (req, res) => {
-    try {
+      cashRegister.status = 'fechado';
+      cashRegister.closingBalance = closingBalance;
+      await cashRegister.save();
+      res.status(200).json(cashRegister);
+  } catch (error) {
+      res.status(500).send('Erro ao fechar caixa: ' + error.message);
+  }
+};
+
+// Consulta de Saldo
+exports.getCashRegisterBalance = async (req, res) => {
+  try {
       const { registerNumber } = req.params;
-      const { amount } = req.body;
-  
-      // Verificar se há um caixa aberto com o número de caixa específico
-      const openCashRegister = await CashRegister.findOne({ where: { registerNumber, status: 'aberto' } });
-      if (!openCashRegister) {
-        return res.status(400).json({ message: `Não há caixa aberto para o número ${registerNumber}.` });
+      const cashRegister = await CashRegister.findOne({ where: { registerNumber } });
+      if (!cashRegister) {
+          return res.status(404).send('Caixa não encontrado.');
       }
-  
-      // Subtrair o valor do saldo e adicionar ao total de sangrias (cashOutflow)
-      openCashRegister.openingBalance -= parseFloat(amount);
-      openCashRegister.cashOutflow += parseFloat(amount);  // Atualizar a sangria total
-      await openCashRegister.save();
-  
-      res.status(200).json(openCashRegister);
+      const balance = cashRegister.openingBalance;
+      res.json({ balance });
+  } catch (error) {
+      res.status(500).send('Erro ao consultar saldo: ' + error.message);
+  }
+};
+
+// Consulta de Vendas por Método de Pagamento
+exports.getSalesByMethod = async (req, res) => {
+    const { registerNumber } = req.params;
+
+    try {
+        const sales = await Sale.findAll({
+            where: { cashierId: registerNumber }
+        });
+
+        let totalCashSales = 0;
+        let totalPixSales = 0;
+        let totalDebitSales = 0;
+        let totalCreditSales = 0;
+        let totalVoucherSales = 0;
+
+        sales.forEach(sale => {
+            switch (sale.paymentMethod) {
+                case 'cash':
+                    totalCashSales += parseFloat(sale.totalPrice);
+                    break;
+                case 'pix':
+                    totalPixSales += parseFloat(sale.totalPrice);
+                    break;
+                case 'debit':
+                    totalDebitSales += parseFloat(sale.totalPrice);
+                    break;
+                case 'credit':
+                    totalCreditSales += parseFloat(sale.totalPrice);
+                    break;
+                case 'voucher':
+                    totalVoucherSales += parseFloat(sale.totalPrice);
+                    break;
+                default:
+                    break;
+            }
+        });
+
+        res.json({
+            totalCashSales: totalCashSales.toFixed(2),
+            totalPixSales: totalPixSales.toFixed(2),
+            totalDebitSales: totalDebitSales.toFixed(2),
+            totalCreditSales: totalCreditSales.toFixed(2),
+            totalVoucherSales: totalVoucherSales.toFixed(2)
+        });
     } catch (error) {
-      res.status(500).send(`Erro ao registrar sangria: ${error.message}`);
+        res.status(500).send(error.message);
     }
-  };
-  
+};
