@@ -9,11 +9,12 @@ const fs = require('fs');
 exports.createSale = async (req, res) => {
     try {
         const { userId, registerNumber, productId, quantity, discount } = req.body;
-        
+
+        // Verifica se o produto existe
         const product = await Product.findByPk(productId);
         if (!product) return res.status(404).send('Produto não encontrado!');
 
-        // Verifica tem estoque do produto
+        // Verifica se há estoque suficiente do produto
         if (product.stock < quantity) {
             return res.status(400).send('Estoque insuficiente');
         }
@@ -22,7 +23,19 @@ exports.createSale = async (req, res) => {
         product.stock -= quantity;
         await product.save();
 
-        const totalPrice = (product.price * quantity) - discount; // Calcula o preço total com desconto
+        // Calcula o preço total com desconto
+        const totalPrice = (product.price * quantity) - discount; 
+
+        // Verifica se o caixa está aberto
+        const openCashRegister = await CashRegister.findOne({
+            where: { registerNumber, status: 'aberto' }
+        });
+
+        if (!openCashRegister) {
+            return res.status(400).send('O caixa está fechado ou não existe.');
+        }
+
+        // Cria a venda
         const sale = await Sale.create({
             userId,
             registerNumber,
@@ -31,12 +44,18 @@ exports.createSale = async (req, res) => {
             discount,
             totalPrice
         });
+
+        // Atualiza o saldo do caixa após a venda
+        openCashRegister.openingBalance = parseFloat(openCashRegister.openingBalance) + parseFloat(totalPrice);
+        await openCashRegister.save();
+
         res.status(201).json(sale);
     } catch (error) {
         res.status(500).send(error.message);
     }
 };
 
+//Lista todas as vendas
 exports.listSales = async (req, res) => {
     try {
         const sales = await Sale.findAll();
