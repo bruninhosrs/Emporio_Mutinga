@@ -1,53 +1,71 @@
-// Criação de Caixa
+// Criação de Relatório do Caixa
 const { Model, DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
 class CashRegister extends Model {}
 
 CashRegister.init({
-    registerNumber: { // Identificador do número do caixa da loja
+    registerNumber: {
         type: DataTypes.INTEGER,
-        allowNull: false,
-        primaryKey: true
+        primaryKey: true,  // Definindo como chave primária
+        autoIncrement: true
     },
-    storeId: { //Identificador de qual loja o caixa pertence
-        type: DataTypes.INTEGER,
-        allowNull: false,
-        primaryKey: true
-    },
-    openingBalance: { //Saldo inicial do caixa, após ele ser aberto
+    openingBalance: {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: false,
         defaultValue: 0.00
     },
-    closingBalance: { //Saldo final do caixa, após ele ser fechado
+    closingBalance: {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: true
     },
-    cashOutflow: {  // Sangria de caixa
+    totalCashSales: {
+        type: DataTypes.DECIMAL(10, 2),
+        allowNull: false,
+        defaultValue: 0.00
+    },
+    totalPixSales: {
+        type: DataTypes.DECIMAL(10, 2),
+        allowNull: false,
+        defaultValue: 0.00
+    },
+    totalDebitSales: {
+        type: DataTypes.DECIMAL(10, 2),
+        allowNull: false,
+        defaultValue: 0.00
+    },
+    totalCreditSales: {
+        type: DataTypes.DECIMAL(10, 2),
+        allowNull: false,
+        defaultValue: 0.00
+    },
+    totalVoucherSales: {
+        type: DataTypes.DECIMAL(10, 2),
+        allowNull: false,
+        defaultValue: 0.00
+    },
+    totalWithdrawals: {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: false,
         defaultValue: 0.00
     },
     status: {
-        type: DataTypes.STRING,
+        type: DataTypes.ENUM('aberto', 'fechado'),
         allowNull: false,
         defaultValue: 'aberto'
     },
     createdAt: {
         type: DataTypes.DATE,
-        allowNull: false,
-        defaultValue: DataTypes.NOW
+        defaultValue: DataTypes.NOW, 
     },
-    closedAt: { //Data e horário do fechamento
+    updatedAt: {
         type: DataTypes.DATE,
-        allowNull: true
+        defaultValue: DataTypes.NOW, 
     }
 }, {
     sequelize,
     modelName: 'cashRegister',
-    timestamps: false
+    timestamps: true
 });
 
 module.exports = CashRegister;
-
