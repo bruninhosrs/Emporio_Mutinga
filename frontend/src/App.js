@@ -14,6 +14,8 @@ import EditClient from './components/EditClient';
 import Suppliers from './pages/Suppliers';
 import AddSupplier from './components/AddSupplier';
 import EditSupplier from './components/EditSupplier';
+import CashRegister from './pages/CashRegister';
+import Reports from './pages/Reports';
 
 function App() {
   return (
@@ -33,6 +35,8 @@ function App() {
         <Route path="/suppliers" element={<PrivateRoute><Suppliers /></PrivateRoute>}/>
         <Route path="/suppliers/add" element={<PrivateRoute><AddSupplier /></PrivateRoute>}/>
         <Route path="/suppliers/edit/:id" element={<PrivateRoute><EditSupplier /></PrivateRoute>}/>
+        <Route path="/cashregister" element={<PrivateRoute><CashRegister /></PrivateRoute>} />
+        <Route path="/reports" element={<PrivateRoute><Reports /></PrivateRoute>} />
       </Routes>
     </Router>
   );

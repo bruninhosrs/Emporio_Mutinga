@@ -53,7 +53,7 @@ const retryTransaction = async (operation, retries = 3) => {
 // Função para verificar e sincronizar as tabelas
 const syncTables = async () => {
     try {
-        await retryTransaction(() => sequelize.sync({ alter: true })); // Usando a lógica de re-tentativa
+        await retryTransaction(() => sequelize.sync({ alter: false })); // Usando a lógica de re-tentativa
         console.log('Todas as tabelas foram sincronizadas com sucesso.');
     } catch (error) {
         console.error('Erro ao sincronizar tabelas:', error);

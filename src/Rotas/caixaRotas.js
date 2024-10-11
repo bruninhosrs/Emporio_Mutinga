@@ -7,9 +7,9 @@ const { authenticateToken, authorizeRole } = require('../middleware/authenticate
 // Operações de caixa para um caixa específico (registerNumber)
 router.get('/', CashRegisterController.listAllCash);
 router.post('/open', authenticateToken, authorizeRole(['sub-gerente', 'gerente', 'super-admin']), CashRegisterController.openCashRegister);
-router.post('/close', authenticateToken, authorizeRole(['sub-gerente', 'gerente', 'super-admin']), CashRegisterController.closeCashRegister);
+router.post('/close/:registerNumber', authenticateToken, authorizeRole(['sub-gerente', 'gerente', 'super-admin']), CashRegisterController.closeCashRegister);
 router.post('/withdraw', authenticateToken, authorizeRole(['sub-gerente', 'gerente', 'super-admin']), CashRegisterController.withdrawFromCashRegister); // Sangria de caixa
-router.get('/balance/:registerNumber', authenticateToken, CashRegisterController.getCashRegisterBalance);
-router.get('/sales/:registerNumber', authenticateToken, CashRegisterController.getSalesByMethod);
+router.get('/balance/:id', authenticateToken, CashRegisterController.getCashRegisterBalance);
+router.get('/sales/:id', authenticateToken, CashRegisterController.getSalesByMethod);
 
 module.exports = router;

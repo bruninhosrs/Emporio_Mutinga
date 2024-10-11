@@ -33,6 +33,10 @@ Sale.init({
     totalPrice: {
         type: DataTypes.DECIMAL(10, 2),
         allowNull: false
+    },
+    paymentMethod: {
+        type: DataTypes.ENUM('dinheiro', 'pix', 'debito', 'credito', 'voucher'),
+        allowNull: false
     }
 }, {
     sequelize,
@@ -43,9 +47,5 @@ Sale.init({
 Sale.belongsTo(User, {foreignKey: 'userId', as: 'User'});  // Relaciona Sale com User
 Sale.belongsTo(Product, {foreignKey: 'productId', as: 'Product'});  // Relaciona Sale com Product
 Sale.belongsTo(CashRegister, { foreignKey: 'registerNumber', targetKey: 'registerNumber', as: 'CashRegister' });  // Relaciona Sale com CashRegister
-
-// Sale.belongsTo(Product, { as: 'Product' });
-// Sale.belongsTo(User, { as: 'User' });
-// Sale.belongsTo(CashRegister, { as: 'CashRegister' });
 
 module.exports = Sale;

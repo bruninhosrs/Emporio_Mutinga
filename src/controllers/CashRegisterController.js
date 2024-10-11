@@ -2,7 +2,7 @@
 const CashRegister = require('../models/CashRegister');
 const Sale = require ('../models/Sales');
 
-// Lista todos os usuários
+// Lista todos os caixas
 exports.listAllCash = async (req, res) => {
   try {
     const cashregister = await CashRegister.findAll();
@@ -15,122 +15,125 @@ exports.listAllCash = async (req, res) => {
 // Sangria de Caixa (retirada de dinheiro)
 exports.withdrawFromCashRegister = async (req, res) => {
   try {
-      const { registerNumber, withdrawalAmount } = req.body;
+    const { registerNumber, withdrawalAmount } = req.body;
 
-      const cashRegister = await CashRegister.findOne({ where: { registerNumber, status: 'aberto' } });
-      if (!cashRegister) {
-          return res.status(404).send('Caixa não encontrado ou já fechado.');
-      }
+    const cashRegister = await CashRegister.findOne({ where: { registerNumber, status: 'aberto' } });
+    if (!cashRegister) {
+      return res.status(404).send('Caixa não encontrado ou já fechado.');
+    }
 
-      // Verifica se a sangria é possível (se há saldo suficiente)
-      if (cashRegister.openingBalance < withdrawalAmount) {
-          return res.status(400).send('Saldo insuficiente para a sangria.');
-      }
+    // Verifica se há saldo suficiente para a sangria
+    if (cashRegister.openingBalance < withdrawalAmount) {
+      return res.status(400).send('Saldo insuficiente para a sangria.');
+    }
 
-      // Atualiza o valor total das sangrias e o saldo de abertura
-      cashRegister.totalWithdrawals += withdrawalAmount;
-      cashRegister.openingBalance -= withdrawalAmount;
+    // Atualiza o valor total das sangrias e o saldo de abertura
+    cashRegister.totalWithdrawals = parseFloat(cashRegister.totalWithdrawals || 0) + withdrawalAmount;
+    cashRegister.openingBalance -= withdrawalAmount;
 
-      await cashRegister.save();
-      res.status(200).json({ message: 'Sangria realizada com sucesso', cashRegister });
+    await cashRegister.save();
+    res.status(200).json({ message: 'Sangria realizada com sucesso', cashRegister });
   } catch (error) {
-      res.status(500).send('Erro ao realizar sangria: ' + error.message);
+    res.status(500).send('Erro ao realizar sangria: ' + error.message);
   }
 };
 
 // Abertura de Caixa
 exports.openCashRegister = async (req, res) => {
   try {
-      const { registerNumber, openingBalance } = req.body;
-      const newCashRegister = await CashRegister.create({
-          registerNumber,
-          openingBalance,
-          status: 'aberto'
-      });
-      res.status(201).json(newCashRegister);
+    const { registerNumber, openingBalance } = req.body;
+    const newCashRegister = await CashRegister.create({
+      registerNumber,
+      openingBalance,
+      status: 'aberto'
+    });
+    res.status(201).json(newCashRegister);
   } catch (error) {
-      res.status(500).send('Erro ao abrir caixa: ' + error.message);
+    res.status(500).send('Erro ao abrir caixa: ' + error.message);
   }
 };
 
 // Fechamento de Caixa
 exports.closeCashRegister = async (req, res) => {
   try {
-      const { registerNumber, closingBalance } = req.body;
-      const cashRegister = await CashRegister.findOne({ where: { registerNumber, status: 'aberto' } });
-      if (!cashRegister) {
-          return res.status(404).send('Caixa não encontrado ou já fechado.');
-      }
+    const { registerNumber } = req.params;
 
-      cashRegister.status = 'fechado';
-      cashRegister.closingBalance = closingBalance;
-      await cashRegister.save();
-      res.status(200).json(cashRegister);
+    const cashRegister = await CashRegister.findOne({
+      where: { registerNumber, status: 'aberto' }
+    });
+
+    if (!cashRegister) {
+      return res.status(400).send('Caixa não encontrado ou já está fechado.');
+    }
+
+    const closingBalance = parseFloat(cashRegister.openingBalance) + 
+                           parseFloat(cashRegister.totalCashSales || 0) + 
+                           parseFloat(cashRegister.totalPixSales || 0) + 
+                           parseFloat(cashRegister.totalDebitSales || 0) + 
+                           parseFloat(cashRegister.totalCreditSales || 0) + 
+                           parseFloat(cashRegister.totalVoucherSales || 0) - 
+                           parseFloat(cashRegister.totalWithdrawals || 0);
+
+    cashRegister.closingBalance = closingBalance;
+    cashRegister.status = 'fechado';
+    await cashRegister.save();
+
+    res.status(200).json({
+      message: 'Caixa fechado com sucesso.',
+      closingBalance: closingBalance
+    });
   } catch (error) {
-      res.status(500).send('Erro ao fechar caixa: ' + error.message);
+    res.status(500).send('Erro ao fechar o caixa: ' + error.message);
   }
 };
 
-// Consulta de Saldo
+// Consulta de Saldo do Caixa
 exports.getCashRegisterBalance = async (req, res) => {
   try {
-      const { registerNumber } = req.params;
-      const cashRegister = await CashRegister.findOne({ where: { registerNumber } });
-      if (!cashRegister) {
-          return res.status(404).send('Caixa não encontrado.');
-      }
-      const balance = cashRegister.openingBalance;
-      res.json({ balance });
+    const { id } = req.params;
+
+    const cashRegister = await CashRegister.findOne({
+      where: { registerNumber: id }
+    });
+
+    if (!cashRegister) {
+      return res.status(404).json({ message: 'Caixa não encontrado.' });
+    }
+
+    const balance = parseFloat(cashRegister.openingBalance) + 
+                    parseFloat(cashRegister.totalCashSales || 0) + 
+                    parseFloat(cashRegister.totalPixSales || 0) + 
+                    parseFloat(cashRegister.totalDebitSales || 0) + 
+                    parseFloat(cashRegister.totalCreditSales || 0) + 
+                    parseFloat(cashRegister.totalVoucherSales || 0);
+
+    res.status(200).json({ balance: balance.toFixed(2) });
   } catch (error) {
-      res.status(500).send('Erro ao consultar saldo: ' + error.message);
+    res.status(500).json({ message: 'Erro ao consultar saldo.', error: error.message });
   }
 };
 
 // Consulta de Vendas por Método de Pagamento
 exports.getSalesByMethod = async (req, res) => {
-    const { registerNumber } = req.params;
+  try {
+    const { id } = req.params;
 
-    try {
-        const sales = await Sale.findAll({
-            where: { cashierId: registerNumber }
-        });
+    const cashRegister = await CashRegister.findOne({
+      where: { registerNumber: id }
+    });
 
-        let totalCashSales = 0;
-        let totalPixSales = 0;
-        let totalDebitSales = 0;
-        let totalCreditSales = 0;
-        let totalVoucherSales = 0;
-
-        sales.forEach(sale => {
-            switch (sale.paymentMethod) {
-                case 'dinheiro':
-                    totalCashSales += parseFloat(sale.totalPrice);
-                    break;
-                case 'pix':
-                    totalPixSales += parseFloat(sale.totalPrice);
-                    break;
-                case 'debito':
-                    totalDebitSales += parseFloat(sale.totalPrice);
-                    break;
-                case 'credito':
-                    totalCreditSales += parseFloat(sale.totalPrice);
-                    break;
-                case 'voucher':
-                    totalVoucherSales += parseFloat(sale.totalPrice);
-                    break;
-                default:
-                    break;
-            }
-        });
-
-        res.json({
-            totalCashSales: totalCashSales.toFixed(2),
-            totalPixSales: totalPixSales.toFixed(2),
-            totalDebitSales: totalDebitSales.toFixed(2),
-            totalCreditSales: totalCreditSales.toFixed(2),
-            totalVoucherSales: totalVoucherSales.toFixed(2)
-        });
-    } catch (error) {
-        res.status(500).send(error.message);
+    if (!cashRegister) {
+      return res.status(404).json({ message: 'Caixa não encontrado.' });
     }
+
+    res.status(200).json({
+      totalCashSales: cashRegister.totalCashSales || "0.00",
+      totalPixSales: cashRegister.totalPixSales || "0.00",
+      totalDebitSales: cashRegister.totalDebitSales || "0.00",
+      totalCreditSales: cashRegister.totalCreditSales || "0.00",
+      totalVoucherSales: cashRegister.totalVoucherSales || "0.00"
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Erro ao consultar os métodos de pagamento.', error: error.message });
+  }
 };
