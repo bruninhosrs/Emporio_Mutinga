@@ -14,8 +14,7 @@ import EditClient from './components/EditClient';
 import Suppliers from './pages/Suppliers';
 import AddSupplier from './components/AddSupplier';
 import EditSupplier from './components/EditSupplier';
-import CashRegister from './pages/CashRegister';
-import Reports from './pages/Reports';
+import CashRegisterInterface from './components/CashRegisterInterface';
 
 function App() {
   return (
@@ -23,6 +22,7 @@ function App() {
       <Routes>
         <Route path="/login" element={<Login />} />
         <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
+        <Route path="/caixa" element={<PrivateRoute><CashRegisterInterface /></PrivateRoute>} />
         <Route path="/products" element={<PrivateRoute><Products /></PrivateRoute>} />
         <Route path="/products/add" element={<PrivateRoute><AddProduct /></PrivateRoute>} />
         <Route path="/products/edit/:id" element={<PrivateRoute><EditProduct /></PrivateRoute>} />
@@ -35,8 +35,6 @@ function App() {
         <Route path="/suppliers" element={<PrivateRoute><Suppliers /></PrivateRoute>}/>
         <Route path="/suppliers/add" element={<PrivateRoute><AddSupplier /></PrivateRoute>}/>
         <Route path="/suppliers/edit/:id" element={<PrivateRoute><EditSupplier /></PrivateRoute>}/>
-        <Route path="/cashregister" element={<PrivateRoute><CashRegister /></PrivateRoute>} />
-        <Route path="/reports" element={<PrivateRoute><Reports /></PrivateRoute>} />
       </Routes>
     </Router>
   );

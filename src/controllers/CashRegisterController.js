@@ -41,12 +41,32 @@ exports.withdrawFromCashRegister = async (req, res) => {
 // Abertura de Caixa
 exports.openCashRegister = async (req, res) => {
   try {
-    const { registerNumber, openingBalance } = req.body;
+    const { registerNumber } = req.body;
+
+    // Verificar se o caixa já existe
+    let cashRegister = await CashRegister.findOne({
+      where: { registerNumber }
+    });
+
+    if (cashRegister) {
+      // Se o caixa estiver fechado, reabra o caixa
+      if (cashRegister.status === 'fechado') {
+        cashRegister.status = 'aberto';
+        cashRegister.openingBalance = 0; // Zera o saldo de abertura ao reabrir
+        cashRegister.closingBalance = null; // Resetando o valor de fechamento para um novo ciclo
+        await cashRegister.save();
+        return res.status(200).json({ message: 'Caixa reaberto com sucesso e saldo inicial zerado.', cashRegister });
+      }
+      return res.status(400).json({ message: 'O caixa já está aberto.' });
+    }
+
+    // Caso contrário, criar um novo caixa com saldo inicial
     const newCashRegister = await CashRegister.create({
       registerNumber,
-      openingBalance,
+      openingBalance: 0, // Zera o saldo de abertura no novo caixa também
       status: 'aberto'
     });
+
     res.status(201).json(newCashRegister);
   } catch (error) {
     res.status(500).send('Erro ao abrir caixa: ' + error.message);

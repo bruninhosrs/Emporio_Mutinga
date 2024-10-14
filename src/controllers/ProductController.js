@@ -11,6 +11,20 @@ exports.listAllProducts = async (req, res) => {
   }
 };
 
+// No arquivo ProductController.js
+exports.getProductByBarcode = async (req, res) => {
+  const { barcode } = req.params;
+  try {
+      const product = await Product.findOne({ where: { barcode } });
+      if (!product) {
+          return res.status(404).json({ message: 'Produto não encontrado' });
+      }
+      res.json(product);
+  } catch (error) {
+      res.status(500).json({ message: 'Erro ao buscar produto', error: error.message });
+  }
+};
+
 // Busca um produto pelo ID
 exports.getProductById = async (req, res) => {
   try {
