@@ -16,9 +16,13 @@ function Login() {
         username,
         password,
       });
+
       console.log('Login bem-sucedido:', response.data);
+
       localStorage.setItem('token', response.data.token);
-      navigate('/dashboard');
+      localStorage.setItem('role', response.data.role);
+      console.log('Role recebida:', response.data.role);
+      navigate('/home');
       
     } catch (error) {
       console.error('Erro ao fazer login:', error);

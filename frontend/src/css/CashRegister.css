@@ -1,0 +1,75 @@
+.cash-register-container {
+    width: 90%;
+    margin: auto;
+    font-family: Arial, sans-serif;
+    text-align: center;
+}
+
+.actions {
+    margin-bottom: 20px;
+}
+
+.btn-open {
+    background-color: #007bff;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.btn-add {
+    background-color: #28a745;
+    color: white;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+    margin-left: 10px;
+}
+
+.sale-section {
+    border: 1px solid #ccc;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+.sale-inputs label {
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+.sale-inputs input {
+    margin-right: 10px;
+    padding: 5px;
+    font-size: 16px;
+}
+
+.product-list ul {
+    list-style: none;
+    padding: 0;
+}
+
+.product-list li {
+    margin-bottom: 10px;
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.product-list button {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+}
+
+.total {
+    font-size: 24px;
+    font-weight: bold;
+    margin-top: 20px;
+    color: #333;
+}

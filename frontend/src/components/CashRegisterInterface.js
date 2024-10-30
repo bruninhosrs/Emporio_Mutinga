@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import '../css/CashRegister.css';
 
 const CashRegisterInterface = () => {
     const [products, setProducts] = useState([]);
@@ -14,7 +15,7 @@ const CashRegisterInterface = () => {
             const token = localStorage.getItem('token'); // Assumindo que o token está armazenado no localStorage
             const response = await axios.post('http://localhost:3000/cashRegisters/open', {
                 registerNumber: 1, // Caixa 1, alterar conforme necessário
-                openingBalance: 50 // Valor de abertura
+                openingBalance: 50.00 // Valor de abertura
             }, {
                 headers: {
                     'Authorization': `Bearer ${token}` // Inclui o token no cabeçalho
@@ -62,37 +63,41 @@ const CashRegisterInterface = () => {
     };
 
     return (
-        <div>
+        <div className="cash-register-container">
             <h1>Caixa Registradora</h1>
-            <button onClick={handleOpenCashRegister}>Abrir com R$50,00</button>
-            <p>{message}</p>
+            <button className="open-cash-button" onClick={handleOpenCashRegister}>Abrir Caixa</button>
+            {message && <p className="message">{message}</p>}
 
-            <h2>Venda</h2>
-            <input 
-                type="text" 
-                value={ean} 
-                onChange={(e) => setEan(e.target.value)} 
-                placeholder="EAN" 
-            />
-            <input 
-                type="number" 
-                value={quantity} 
-                onChange={(e) => setQuantity(e.target.value)} 
-                min="1" 
-            />
-            <button onClick={handleAddProduct}>Adicionar Produto</button>
+            <div className="venda-section">
+                <h2>Venda</h2>
+                <input 
+                    type="text" 
+                    value={ean} 
+                    onChange={(e) => setEan(e.target.value)} 
+                    placeholder="EAN do Produto" 
+                />
+                <input 
+                    type="number" 
+                    value={quantity} 
+                    onChange={(e) => setQuantity(e.target.value)} 
+                    min="1" 
+                />
+                <button onClick={handleAddProduct}>Adicionar Produto</button>
+            </div>
 
             <h3>Lista de Produtos</h3>
             <ul>
                 {products.map((product, index) => (
                     <li key={index}>
                         {product.name} - Qtd: {product.quantity} - R${(product.price * product.quantity).toFixed(2)}
-                        <button onClick={() => handleRemoveProduct(index)}>Remover</button>
+                        <button className="remove-product-button" onClick={() => handleRemoveProduct(index)}>Remover</button>
                     </li>
                 ))}
             </ul>
 
-            <h2>Total da Venda: R${total.toFixed(2)}</h2>
+            <div className="total-sale">
+                <h2>Total da Venda: R${total.toFixed(2)}</h2>
+            </div>
         </div>
     );
 };

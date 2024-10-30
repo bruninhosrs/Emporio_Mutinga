@@ -1,6 +1,8 @@
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { useEffect } from 'react';
+import { BrowserRouter as Router, Route, Routes, useNavigate } from 'react-router-dom';
 import PrivateRoute from './components/PrivateRoute';
 import Login from '../src/pages/Login';
+import Home from './pages/Home';
 import Dashboard from '../src/pages/Dashboard';
 import Products from '../src/pages/Products';
 import AddProduct from '../src/components/AddProduct';
@@ -16,11 +18,32 @@ import AddSupplier from './components/AddSupplier';
 import EditSupplier from './components/EditSupplier';
 import CashRegisterInterface from './components/CashRegisterInterface';
 
+const RedirectToLogin = () => {
+  const navigate = useNavigate();
+
+  useEffect(() => {
+      const token = localStorage.getItem('token');
+      // Verifica se o token existe e não está vazio
+      if (!token || token === 'undefined' || token === null) {
+          // Redireciona para login se não houver token válido
+          navigate('/login');
+      } else {
+          // Se o token existir, redireciona para a home
+          navigate('/home');
+      }
+  }, [navigate]);
+
+  return null;
+};
+
+
 function App() {
   return (
     <Router>
       <Routes>
+        <Route path="/" element={<RedirectToLogin />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/home" element={<Home />} />
         <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
         <Route path="/caixa" element={<PrivateRoute><CashRegisterInterface /></PrivateRoute>} />
         <Route path="/products" element={<PrivateRoute><Products /></PrivateRoute>} />
