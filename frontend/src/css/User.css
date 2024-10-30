@@ -1,0 +1,62 @@
+.user-list-container {
+    background-color: #f2f2f2; /* Cor de fundo branco voltado para cinza claro */
+    padding: 20px;
+    border-radius: 8px;
+    width: 60%;
+    margin: 50px auto;
+}
+
+.title {
+    text-align: center;
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.user-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 20px;
+}
+
+.user-table th, .user-table td {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+}
+
+.user-table tr.selected {
+    background-color: #d3d3d3; /* Destaque para o usuário selecionado */
+}
+
+.buttons {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.add-button {
+    background-color: #4CAF50; /* Verde para adicionar */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.edit-button {
+    background-color: #FFEB3B; /* Amarelo para editar */
+    color: black;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+.delete-button {
+    background-color: #f44336; /* Vermelho para deletar */
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 4px;
+}

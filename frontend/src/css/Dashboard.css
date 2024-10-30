@@ -1,38 +1,49 @@
+/* Background voltado para o cinza claro */
 .cadastro-container {
-    width: 100%;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-  }
-  
-  .cadastro-header {
-    background-color: #007bff;
-    color: white;
-    padding: 15px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  .cadastro-nav ul {
-    list-style: none;
-    display: flex;
-    gap: 20px;
-  }
-  
-  .cadastro-nav a {
-    color: white;
-    text-decoration: none;
-    transition: color 0.3s;
-  }
-  
-  .cadastro-nav a:hover {
-    color: #cce7ff;
-  }
-  
-  .cadastro-content {
-    flex: 1;
-    padding: 20px;
-    background-color: #f4f4f9;
-    overflow-y: auto;
-  }
+  background-color: #f0f0f0; /* Cinza claro */
+  padding: 20px;
+  height: 100vh;
+}
+
+.navbar {
+  display: flex;
+  justify-content: space-around;
+  background-color: #ffffff; /* Branco */
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+.navbar a {
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+  padding: 10px;
+}
+
+.titulo-cadastro {
+  text-align: center;
+  margin-top: 20px;
+  font-size: 28px;
+}
+
+.botoes-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 40px;
+}
+
+.botao-icone {
+  text-align: center;
+  margin: 0 20px;
+}
+
+.botao-icone a {
+  text-decoration: none;
+  color: #333;
+  font-weight: bold;
+}
+
+.botao-icone i {
+  font-size: 48px;
+  margin-bottom: 10px;
+}
