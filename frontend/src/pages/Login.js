@@ -1,32 +1,33 @@
-import { useNavigate } from 'react-router-dom';
-import React, { useState } from 'react';
-import axios from 'axios';
-import '../css/Login.css';
+import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import axios from "axios";
+import "../css/Login.css";
 
 function Login() {
-  const [username, setUsername] = useState('');
-  const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://localhost:3000/users/login', {
+      const response = await axios.post("http://localhost:3000/users/login", {
         username,
         password,
       });
 
-      console.log('Login bem-sucedido:', response.data);
+      console.log("Login bem-sucedido:", response.data);
 
-      localStorage.setItem('token', response.data.token);
-      localStorage.setItem('role', response.data.role);
-      console.log('Role recebida:', response.data.role);
-      navigate('/home');
-      
+      localStorage.setItem("token", response.data.token);
+      localStorage.setItem("role", response.data.role);
+      console.log("Role recebida:", response.data.role);
+      navigate("/home");
     } catch (error) {
-      console.error('Erro ao fazer login:', error);
-      setError('Falha ao realizar login, por favor, verifique suas credenciais.');
+      console.error("Erro ao fazer login:", error);
+      setError(
+        "Falha ao realizar login, por favor, verifique suas credenciais."
+      );
     }
   };
 
@@ -34,17 +35,17 @@ function Login() {
     <div className="login-container">
       <h1>Login</h1>
       <form onSubmit={handleSubmit}>
-        <input 
-          type="text" 
-          placeholder="Nome de Usuário" 
-          value={username} 
-          onChange={(e) => setUsername(e.target.value)} 
+        <input
+          type="text"
+          placeholder="Nome de Usuário"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
         />
-        <input 
-          type="password" 
-          placeholder="Senha" 
-          value={password} 
-          onChange={(e) => setPassword(e.target.value)} 
+        <input
+          type="password"
+          placeholder="Senha"
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
         />
         <button type="submit">Entrar</button>
       </form>

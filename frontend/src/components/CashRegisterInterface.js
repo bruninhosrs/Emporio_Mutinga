@@ -1,105 +1,126 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import '../css/CashRegister.css';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import "../css/CashRegister.css";
 
 const CashRegisterInterface = () => {
-    const [products, setProducts] = useState([]);
-    const [ean, setEan] = useState('');
-    const [quantity, setQuantity] = useState(1);
-    const [total, setTotal] = useState(0);
-    const [message, setMessage] = useState('');
+  const [products, setProducts] = useState([]);
+  const [total, setTotal] = useState(0);
+  const [ean, setEan] = useState("");
+  const [quantity, setQuantity] = useState(1);
+  const [discount, setDiscount] = useState(0);
+  const [message, setMessage] = useState("");
 
-    // Função para abrir o caixa
-    const handleOpenCashRegister = async () => {
-        try {
-            const token = localStorage.getItem('token'); // Assumindo que o token está armazenado no localStorage
-            const response = await axios.post('http://localhost:3000/cashRegisters/open', {
-                registerNumber: 1, // Caixa 1, alterar conforme necessário
-                openingBalance: 50.00 // Valor de abertura
-            }, {
-                headers: {
-                    'Authorization': `Bearer ${token}` // Inclui o token no cabeçalho
-                }
-            });
-            setMessage('Caixa aberto com sucesso!');
-            console.log('Caixa aberto:', response.data);
-        } catch (error) {
-            console.error('Erro ao abrir caixa:', error);
-            setMessage('Erro ao abrir o caixa.');
-        }
+  useEffect(() => {
+    const updateDateTime = () => {
+      const now = new Date();
+      const date = now.toLocaleDateString();
+      const time = now.toLocaleTimeString();
+      setMessage(`${date} ${time}`);
     };
+    const intervalId = setInterval(updateDateTime, 1000);
+    return () => clearInterval(intervalId);
+  }, []);
 
-    // Função para adicionar produtos à lista de vendas
-    const handleAddProduct = async () => {
-        try {
-            // Faz uma requisição para buscar o produto pelo EAN
-            const response = await axios.get(`http://localhost:3000/products/ean/${ean}`);
-            const product = response.data;
+  const handleAddProduct = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:3000/products/ean/${ean}`
+      );
+      const product = response.data;
 
-            // Atualiza a lista de produtos e o total
-            const newProduct = { ...product, quantity: parseInt(quantity) };
-            setProducts([...products, newProduct]);
+      const unitPrice = parseFloat(product.price);
+      const totalPrice = unitPrice * quantity * (1 - discount / 100);
 
-            // Atualiza o total da venda
-            setTotal(prevTotal => prevTotal + (product.price * quantity));
+      const newProduct = {
+        name: product.name,
+        quantity,
+        unitPrice: unitPrice,
+        totalPrice: totalPrice.toFixed(2),
+      };
+      setProducts([...products, newProduct]);
+      setTotal((prevTotal) => prevTotal + parseFloat(totalPrice));
+      setEan("");
+      setQuantity(1);
+      setDiscount(0);
+    } catch (error) {
+      console.error("Erro ao adicionar produto:", error);
+      setMessage("Produto não encontrado.");
+    }
+  };
 
-            // Limpa os campos de entrada
-            setEan('');
-            setQuantity(1);
-        } catch (error) {
-            console.error('Erro ao adicionar produto:', error);
-            setMessage('Erro ao adicionar produto.');
-        }
-    };
+  const handleRemoveProduct = (index) => {
+    const productToRemove = products[index];
+    setTotal((prevTotal) => prevTotal - parseFloat(productToRemove.totalPrice));
+    setProducts(products.filter((_, i) => i !== index));
+  };
 
-    // Função para remover produtos da lista
-    const handleRemoveProduct = (index) => {
-        const productToRemove = products[index];
-        setTotal(prevTotal => prevTotal - (productToRemove.price * productToRemove.quantity));
+  return (
+    <div className="cash-register-container">
+      <h1 className="title">Caixa Registradora</h1>
+      <div className="date-time">{message}</div>
 
-        // Remove o produto da lista
-        const updatedProducts = products.filter((_, i) => i !== index);
-        setProducts(updatedProducts);
-    };
+      <div className="product-entry">
+        <input
+          type="text"
+          value={ean}
+          onChange={(e) => setEan(e.target.value)}
+          placeholder="EAN"
+        />
+        <input
+          type="number"
+          value={quantity}
+          onChange={(e) => setQuantity(e.target.value)}
+          placeholder="Quantidade"
+          min="1"
+        />
+        <input
+          type="number"
+          value={discount}
+          onChange={(e) => setDiscount(e.target.value)}
+          placeholder="Desc%"
+          min="0"
+        />
+        <button onClick={handleAddProduct}>Adicionar Produto</button>
+      </div>
 
-    return (
-        <div className="cash-register-container">
-            <h1>Caixa Registradora</h1>
-            <button className="open-cash-button" onClick={handleOpenCashRegister}>Abrir Caixa</button>
-            {message && <p className="message">{message}</p>}
+      <table className="product-table">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Produto</th>
+            <th>Qtd</th>
+            <th>Unit</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          {products.map((product, index) => (
+            <tr key={index}>
+              <td>{index + 1}</td>
+              <td>{product.name}</td>
+              <td>{product.quantity}</td>
+              <td>R${parseFloat(product.unitPrice).toFixed(2)}</td>
+              <td>R${product.totalPrice}</td>
+              <td>
+                <button onClick={() => handleRemoveProduct(index)}>
+                  Remover
+                </button>
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
 
-            <div className="venda-section">
-                <h2>Venda</h2>
-                <input 
-                    type="text" 
-                    value={ean} 
-                    onChange={(e) => setEan(e.target.value)} 
-                    placeholder="EAN do Produto" 
-                />
-                <input 
-                    type="number" 
-                    value={quantity} 
-                    onChange={(e) => setQuantity(e.target.value)} 
-                    min="1" 
-                />
-                <button onClick={handleAddProduct}>Adicionar Produto</button>
-            </div>
+      <h2 className="total">Total a Pagar: R${total.toFixed(2)}</h2>
 
-            <h3>Lista de Produtos</h3>
-            <ul>
-                {products.map((product, index) => (
-                    <li key={index}>
-                        {product.name} - Qtd: {product.quantity} - R${(product.price * product.quantity).toFixed(2)}
-                        <button className="remove-product-button" onClick={() => handleRemoveProduct(index)}>Remover</button>
-                    </li>
-                ))}
-            </ul>
-
-            <div className="total-sale">
-                <h2>Total da Venda: R${total.toFixed(2)}</h2>
-            </div>
-        </div>
-    );
+      <div className="buttons">
+        <button className="btn gray">Sangria</button>
+        <button className="btn gray">Sair</button>
+        <button className="btn gray">Cancelar Item</button>
+        <button className="btn gray">Finalizar</button>
+      </div>
+    </div>
+  );
 };
 
 export default CashRegisterInterface;

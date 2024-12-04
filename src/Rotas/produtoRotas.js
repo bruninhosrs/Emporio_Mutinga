@@ -8,8 +8,8 @@ router.get('/', ProductController.listAllProducts);
 router.post('/', authenticateToken, authorizeRole(['sub-gerente', 'gerente', 'super-admin']), ProductController.createProduct);
 router.put('/:id', authenticateToken, authorizeRole(['sub-gerente', 'gerente', 'super-admin']), ProductController.updateProduct);
 router.delete('/:id', authenticateToken, authorizeRole(['sub-gerente', 'gerente', 'super-admin']), ProductController.deleteProduct);
-router.get('/search', ProductController.searchProducts); // Rota para pesquisa de produtos
-router.get('/ean/:barcode', ProductController.getProductByBarcode); // Rota para buscar um produto pelo código de barras (EAN)
+router.get('/search', ProductController.searchProducts); 
+router.get('/ean/:barcode', ProductController.getProductByBarcode); 
 router.get('/:id', ProductController.getProductById);
 
 module.exports = router;

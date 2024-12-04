@@ -12,12 +12,12 @@ const CashRegister = require('./models/CashRegister');
 const Sale = require('./models/Sales');
 
 app.use(cors({
-    origin: 'http://localhost:3001', // Origem permitida (onde o frontend está rodando)
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos permitidos
-    allowedHeaders: ['Authorization', 'Content-Type'] // Headers permitidos
+    origin: 'http://localhost:3001', 
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    allowedHeaders: ['Authorization', 'Content-Type'] 
   }));
   
-app.use(express.json()); // Para analisar JSON no corpo da requisição
+app.use(express.json());
 
 
 app.use('/users', require('./Rotas/usuarioRotas'));
@@ -37,13 +37,13 @@ app.listen(port, () => {
 const retryTransaction = async (operation, retries = 3) => {
     while (retries) {
         try {
-            return await operation(); // Tenta executar a operação passada
+            return await operation();
         } catch (error) {
             if (error.name === 'SequelizeDatabaseError' && error.message.includes('Deadlock')) {
-                retries -= 1; // Reduz a quantidade de tentativas
+                retries -= 1; 
                 console.warn('Deadlock detected, retrying transaction...', retries, 'retries left');
             } else {
-                throw error; // Se não for deadlock, lança o erro
+                throw error; 
             }
         }
     }
@@ -53,12 +53,11 @@ const retryTransaction = async (operation, retries = 3) => {
 // Função para verificar e sincronizar as tabelas
 const syncTables = async () => {
     try {
-        await retryTransaction(() => sequelize.sync({ alter: false })); // Usando a lógica de re-tentativa
+        await retryTransaction(() => sequelize.sync({ alter: false }));
         console.log('Todas as tabelas foram sincronizadas com sucesso.');
     } catch (error) {
         console.error('Erro ao sincronizar tabelas:', error);
     }
 };
 
-// Sincronizar tabelas
 syncTables();

@@ -1,6 +1,5 @@
-/* Background voltado para o cinza claro */
 .cadastro-container {
-  background-color: #f0f0f0; /* Cinza claro */
+  background-color: #f0f0f0; 
   padding: 20px;
   height: 100vh;
 }
@@ -8,7 +7,7 @@
 .navbar {
   display: flex;
   justify-content: space-around;
-  background-color: #ffffff; /* Branco */
+  background-color: #ffffff; 
   padding: 10px;
   border-bottom: 1px solid #ccc;
 }

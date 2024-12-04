@@ -3,14 +3,14 @@ const jwt = require('jsonwebtoken');
 const secretKey = '123456';
 
 const authenticateToken = (req, res, next) => {
-  const token = req.headers.authorization && req.headers.authorization.split(' ')[1]; // Extrai o token do cabeçalho de autorização
+  const token = req.headers.authorization && req.headers.authorization.split(' ')[1]; 
 
-  if (!token) return res.sendStatus(401); // Se não há token, retorna erro 401 (Não Autorizado)
+  if (!token) return res.sendStatus(401); 
 
   jwt.verify(token, secretKey, (err, user) => {
-    if (err) return res.sendStatus(403); // Se o token é inválido, retorna erro 403 (Proibido)
-    req.user = user; // Adiciona os dados do usuário ao objeto de requisição
-    next(); // Passa para o próximo middleware ou rota
+    if (err) return res.sendStatus(403); 
+    req.user = user; 
+    next();
   });
 };
 

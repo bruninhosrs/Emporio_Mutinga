@@ -1,4 +1,4 @@
-const Order = require('../models/Order');
+const Order = require("../models/Order");
 
 // Lista todos os pedidos
 exports.listAllOrders = async (req, res) => {
@@ -16,7 +16,7 @@ exports.getOrderById = async (req, res) => {
     const { id } = req.params;
     const order = await Order.findByPk(id);
     if (!order) {
-      return res.status(404).send('Pedido não encontrado!');
+      return res.status(404).send("Pedido não encontrado!");
     }
     res.json(order);
   } catch (error) {
@@ -29,12 +29,20 @@ exports.createOrder = async (req, res) => {
   try {
     const { userId, productId, quantity, status } = req.body;
 
-    // Validação básica
     if (!userId || !productId || !quantity) {
-      return res.status(400).send('Campos obrigatórios: userId, productId e quantity.');
+      return res
+        .status(400)
+        .send("Campos obrigatórios: userId, productId e quantity.");
     }
 
-    const newOrder = await Order.create({ userId, productId, quantity, status });
+    const newOrder = await Order.create({
+      
+      userId,
+      productId,
+      quantity,
+      status,
+
+    });
     res.status(201).json(newOrder);
   } catch (error) {
     res.status(500).send(`Erro ao criar pedido: ${error.message}`);
@@ -50,7 +58,7 @@ exports.updateOrder = async (req, res) => {
       const updatedOrder = await Order.findByPk(id);
       res.json(updatedOrder);
     } else {
-      res.status(404).send('Pedido não encontrado!');
+      res.status(404).send("Pedido não encontrado!");
     }
   } catch (error) {
     res.status(500).send(`Erro ao atualizar pedido: ${error.message}`);

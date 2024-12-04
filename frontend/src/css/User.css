@@ -1,5 +1,5 @@
 .user-list-container {
-    background-color: #f2f2f2; /* Cor de fundo branco voltado para cinza claro */
+    background-color: #f2f2f2; 
     padding: 20px;
     border-radius: 8px;
     width: 60%;
@@ -25,7 +25,7 @@
 }
 
 .user-table tr.selected {
-    background-color: #d3d3d3; /* Destaque para o usuário selecionado */
+    background-color: #d3d3d3;
 }
 
 .buttons {
@@ -34,8 +34,24 @@
     margin-top: 20px;
 }
 
+.home-button {
+    padding: 10px 20px;
+    border-radius: 4px;
+    cursor: pointer;
+    border: none;
+    color: white;
+}
+
+.home-button {
+    background-color: #008CBA; 
+}
+
+.home-button:hover {
+    background-color: #005f87;
+}
+
 .add-button {
-    background-color: #4CAF50; /* Verde para adicionar */
+    background-color: #4CAF50;
     color: white;
     padding: 10px 20px;
     border: none;
@@ -44,7 +60,7 @@
 }
 
 .edit-button {
-    background-color: #FFEB3B; /* Amarelo para editar */
+    background-color: #FFEB3B;
     color: black;
     padding: 10px 20px;
     border: none;
@@ -53,7 +69,7 @@
 }
 
 .delete-button {
-    background-color: #f44336; /* Vermelho para deletar */
+    background-color: #f44336;
     color: white;
     padding: 10px 20px;
     border: none;

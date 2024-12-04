@@ -1,69 +1,103 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import "../css/Client.css";
 
-function Clients() {
+const Clients = () => {
   const [clients, setClients] = useState([]);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [selectedClient, setSelectedClient] = useState(null);
   const navigate = useNavigate();
-  const token = localStorage.getItem('token'); // Pegando o token do localStorage
 
   useEffect(() => {
-    if (!token) {
-      setErrorMessage('Token de autenticação não encontrado. Faça login.');
-      return;
-    }
-
-    const fetchClients = async () => {
-      try {
-        const response = await axios.get('http://localhost:3000/clients', {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setClients(response.data);
-      } catch (error) {
-        console.error('Erro ao buscar clientes:', error);
-        setErrorMessage('Erro ao buscar clientes. Tente novamente mais tarde.');
-      }
-    };
-
     fetchClients();
-  }, [token]);
+  }, []);
 
-  const handleDelete = async (clientId) => {
-    const confirmDelete = window.confirm('Você tem certeza que deseja excluir este cliente?');
-    if (!confirmDelete) return;
-
+  const fetchClients = async () => {
     try {
-      await axios.delete(`http://localhost:3000/clients/${clientId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      setClients(clients.filter(client => client.id !== clientId));
+      const response = await axios.get("http://localhost:3000/clients");
+      setClients(response.data);
     } catch (error) {
-      console.error('Erro ao excluir cliente:', error);
-      setErrorMessage('Erro ao excluir o cliente.');
+      console.error("Erro ao buscar clientes:", error);
     }
   };
 
+  // Função para selecionar um cliente
+  const handleSelectClient = (client) => {
+    setSelectedClient(client);
+  };
+
+  // Função para adicionar um cliente
+  const handleAddClient = () => {
+    navigate("/add-client");
+  };
+
+  // Função para editar um cliente
+  const handleEditClient = () => {
+    if (selectedClient) {
+      navigate(`/edit-client/${selectedClient.id}`);
+    }
+  };
+
+  // Função para deletar um cliente
+  const handleDeleteClient = async () => {
+    if (selectedClient) {
+      try {
+        await axios.delete(
+          `http://localhost:3000/clients/${selectedClient.id}`
+        );
+        fetchClients();
+        setSelectedClient(null);
+      } catch (error) {
+        console.error("Erro ao deletar cliente:", error);
+      }
+    }
+  };
+
+  // Função para voltar para a tela de Cadastro
+  const handleGoBack = () => {
+    navigate("/dashboard");
+  };
+
   return (
-    <div>
-      <h1>Clientes</h1>
-      {errorMessage && <p className="error-message">{errorMessage}</p>}
-      <button onClick={() => navigate('/clients/add')}>Adicionar Cliente</button>
-      <ul>
-        {clients.map(client => (
-          <li key={client.id}>
-            {`Nome: ${client.name} | CPF/CNPJ: ${client.cpfCnpj} | Limite de Crédito: ${client.creditLimit}`}
-            <button onClick={() => navigate(`/clients/edit/${client.id}`)}>Editar</button>
-            <button onClick={() => handleDelete(client.id)}>Excluir</button>
-          </li>
-        ))}
-      </ul>
+    <div className="client-list-container">
+      <h1>Listar Cliente</h1>
+      <button className="home-button" onClick={handleGoBack}>
+        🏠
+      </button>
+
+      <div className="client-table">
+        <table>
+          <tbody>
+            {clients.map((client) => (
+              <tr
+                key={client.id}
+                onClick={() => handleSelectClient(client)}
+                className={
+                  selectedClient && selectedClient.id === client.id
+                    ? "selected"
+                    : ""
+                }
+              >
+                <td>{client.name}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <div className="action-buttons">
+        <button className="add-button" onClick={handleAddClient}>
+          Adicionar
+        </button>
+        <button className="edit-button" onClick={handleEditClient}>
+          Editar
+        </button>
+        <button className="delete-button" onClick={handleDeleteClient}>
+          Deletar
+        </button>
+      </div>
     </div>
   );
-}
+};
 
 export default Clients;

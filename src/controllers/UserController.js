@@ -55,7 +55,7 @@ exports.login = async (req, res) => {
 // Retorna detalhes do usuário autenticado
 exports.getUserDetails = async (req, res) => {
   try {
-      const user = await User.findByPk(req.user.userId); // 'req.user.userId' vem do middleware de autenticação
+      const user = await User.findByPk(req.user.userId);
       if (!user) return res.status(404).send('Usuário não encontrado');
 
       res.json({ username: user.username, email: user.email, role: user.role });
@@ -77,6 +77,21 @@ exports.updateUser = async (req, res) => {
     }
   } catch (error) {
     res.status(500).send(error.message);
+  }
+};
+
+// Busca e retorna dados do usuário existente com base no ID
+exports.getUserById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+      const user = await User.findByPk(id);
+      if (!user) {
+          return res.status(404).json({ message: 'Usuário não encontrado.' });
+      }
+      res.status(200).json(user);
+  } catch (error) {
+      res.status(500).json({ message: 'Erro ao buscar usuário.', error: error.message });
   }
 };
 

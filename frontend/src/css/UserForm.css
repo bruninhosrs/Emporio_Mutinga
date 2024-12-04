@@ -1,5 +1,5 @@
 .user-form-container {
-    background-color: #f2f2f2; /* Branco voltado para cinza claro */
+    background-color: #f2f2f2;
     padding: 20px;
     border-radius: 8px;
     width: 60%;
@@ -29,7 +29,7 @@ input, select {
 }
 
 .form-button {
-    background-color: #4CAF50; /* Verde */
+    background-color: #4CAF50;
     color: white;
     padding: 10px 20px;
     border: none;

@@ -1,114 +1,168 @@
-import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import { useParams, useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useNavigate, useParams } from "react-router-dom";
+import "../css/Client.css";
 
-function EditClient() {
+const EditClient = () => {
   const { id } = useParams();
+  const [formData, setFormData] = useState({
+    name: "",
+    fantasyName: "",
+    cpfCnpj: "",
+    address: "",
+    contactName1: "",
+    contactEmail1: "",
+    contactPhone1: "",
+    purchaseHistory: "",
+    creditLimit: "",
+  });
+  const [message, setMessage] = useState("");
   const navigate = useNavigate();
-  const [client, setClient] = useState(null);
-  const [isLoading, setIsLoading] = useState(true);
-  const [errorMessage, setErrorMessage] = useState('');
-  const token = localStorage.getItem('token');
 
+  // Função para buscar os dados do cliente existente
   useEffect(() => {
-    if (!token) {
-      setErrorMessage('Token de autenticação não encontrado. Faça login.');
-      setIsLoading(false);
-      return;
-    }
-
-    const fetchClient = async () => {
+    const fetchClientData = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/clients/${id}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        setClient(response.data);
-        setIsLoading(false);
+        const token = localStorage.getItem("token");
+        const response = await axios.get(
+          `http://localhost:3000/clients/${id}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setFormData(response.data);
       } catch (error) {
-        console.error('Erro ao buscar cliente:', error);
-        setErrorMessage('Erro ao buscar cliente. Tente novamente mais tarde.');
-        setIsLoading(false);
+        console.error("Erro ao carregar dados do cliente:", error);
+        setMessage("Erro ao carregar dados do cliente.");
       }
     };
+    fetchClientData();
+  }, [id]);
 
-    fetchClient();
-  }, [id, token]);
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
 
-  const handleSubmit = async (e) => {
+  // Função para editar o cliente
+  const handleEditClient = async (e) => {
     e.preventDefault();
-
     try {
-      await axios.put(`http://localhost:3000/clients/${id}`, client, {
+      const token = localStorage.getItem("token");
+      await axios.put(`http://localhost:3000/clients/${id}`, formData, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
-      setErrorMessage('');
-      navigate('/clients');
+      setMessage("Cliente atualizado com sucesso!");
+      setTimeout(() => navigate("/clients"), 1500);
     } catch (error) {
-      console.error('Erro ao atualizar cliente:', error);
-      setErrorMessage('Erro ao atualizar cliente. Tente novamente.');
+      console.error("Erro ao atualizar cliente:", error);
+      setMessage("Erro ao atualizar cliente.");
     }
   };
 
-  if (isLoading) return <p>Carregando...</p>;
-  if (!client) return <p>Cliente não encontrado</p>;
+  // Função para cancelar e voltar
+  const handleCancel = () => {
+    navigate("/clients");
+  };
 
   return (
-    <form onSubmit={handleSubmit}>
-      <input 
-        type="text" 
-        value={client.name} 
-        onChange={(e) => setClient({ ...client, name: e.target.value })} 
-        required 
-      />
-      <input 
-        type="text" 
-        value={client.fantasyName || ''} 
-        onChange={(e) => setClient({ ...client, fantasyName: e.target.value })} 
-      />
-      <input 
-        type="text" 
-        value={client.cpfCnpj} 
-        onChange={(e) => setClient({ ...client, cpfCnpj: e.target.value })} 
-        required 
-      />
-      <input 
-        type="text" 
-        value={client.address || ''} 
-        onChange={(e) => setClient({ ...client, address: e.target.value })} 
-      />
-      <input 
-        type="text" 
-        value={client.contactName1 || ''} 
-        onChange={(e) => setClient({ ...client, contactName1: e.target.value })} 
-      />
-      <input 
-        type="email" 
-        value={client.contactEmail1 || ''} 
-        onChange={(e) => setClient({ ...client, contactEmail1: e.target.value })} 
-      />
-      <input 
-        type="text" 
-        value={client.contactPhone1 || ''} 
-        onChange={(e) => setClient({ ...client, contactPhone1: e.target.value })} 
-      />
-      <textarea 
-        value={client.purchaseHistory || ''} 
-        onChange={(e) => setClient({ ...client, purchaseHistory: e.target.value })} 
-      />
-      <input 
-        type="number" 
-        value={client.creditLimit || 0.00} 
-        onChange={(e) => setClient({ ...client, creditLimit: parseFloat(e.target.value) || 0.00 })} 
-        min="0"
-        step="0.01"
-      />
-      <button type="submit">Salvar Alterações</button>
-    </form>
+    <div className="client-form-container">
+      <h1>Editar Cliente</h1>
+      <form onSubmit={handleEditClient} className="client-form">
+        <label>Nome:</label>
+        <input
+          type="text"
+          name="name"
+          value={formData.name}
+          onChange={handleInputChange}
+          required
+        />
+
+        <label>Nome Fantasia:</label>
+        <input
+          type="text"
+          name="fantasyName"
+          value={formData.fantasyName}
+          onChange={handleInputChange}
+        />
+
+        <label>CPF/CNPJ:</label>
+        <input
+          type="text"
+          name="cpfCnpj"
+          value={formData.cpfCnpj}
+          onChange={handleInputChange}
+          required
+        />
+
+        <label>Endereço:</label>
+        <input
+          type="text"
+          name="address"
+          value={formData.address}
+          onChange={handleInputChange}
+        />
+
+        <label>Contato Nome 1:</label>
+        <input
+          type="text"
+          name="contactName1"
+          value={formData.contactName1}
+          onChange={handleInputChange}
+        />
+
+        <label>Contato Email 1:</label>
+        <input
+          type="email"
+          name="contactEmail1"
+          value={formData.contactEmail1}
+          onChange={handleInputChange}
+        />
+
+        <label>Contato Telefone 1:</label>
+        <input
+          type="text"
+          name="contactPhone1"
+          value={formData.contactPhone1}
+          onChange={handleInputChange}
+        />
+
+        <label>Histórico de Compras:</label>
+        <input
+          type="text"
+          name="purchaseHistory"
+          value={formData.purchaseHistory}
+          onChange={handleInputChange}
+        />
+
+        <label>Limite de Crédito:</label>
+        <input
+          type="number"
+          name="creditLimit"
+          value={formData.creditLimit}
+          onChange={handleInputChange}
+        />
+
+        <div className="form-buttons">
+          <button type="submit" className="edit-button">
+            Salvar
+          </button>
+          <button
+            type="button"
+            onClick={handleCancel}
+            className="cancel-button"
+          >
+            Cancelar
+          </button>
+        </div>
+      </form>
+      <p>{message}</p>
+    </div>
   );
-}
+};
 
 export default EditClient;

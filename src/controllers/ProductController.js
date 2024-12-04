@@ -1,5 +1,5 @@
-const Product = require('../models/Product');
-const { Op } = require('sequelize'); // Importe Op para usar operadores
+const Product = require("../models/Product");
+const { Op } = require("sequelize");
 
 // Lista todos os produtos
 exports.listAllProducts = async (req, res) => {
@@ -11,17 +11,19 @@ exports.listAllProducts = async (req, res) => {
   }
 };
 
-// No arquivo ProductController.js
+// Busca o produto pelo código de barras
 exports.getProductByBarcode = async (req, res) => {
   const { barcode } = req.params;
   try {
-      const product = await Product.findOne({ where: { barcode } });
-      if (!product) {
-          return res.status(404).json({ message: 'Produto não encontrado' });
-      }
-      res.json(product);
+    const product = await Product.findOne({ where: { barcode } });
+    if (!product) {
+      return res.status(404).json({ message: "Produto não encontrado" });
+    }
+    res.json(product);
   } catch (error) {
-      res.status(500).json({ message: 'Erro ao buscar produto', error: error.message });
+    res
+      .status(500)
+      .json({ message: "Erro ao buscar produto", error: error.message });
   }
 };
 
@@ -31,7 +33,7 @@ exports.getProductById = async (req, res) => {
     const { id } = req.params;
     const product = await Product.findByPk(id);
     if (!product) {
-      return res.status(404).send('Produto não encontrado!');
+      return res.status(404).send("Produto não encontrado!");
     }
     res.json(product);
   } catch (error) {
@@ -39,7 +41,7 @@ exports.getProductById = async (req, res) => {
   }
 };
 
-// Cria um novo produto
+// Cria um novo produtoX
 exports.createProduct = async (req, res) => {
   try {
     const newProduct = await Product.create(req.body);
@@ -58,7 +60,7 @@ exports.updateProduct = async (req, res) => {
       const updatedProduct = await Product.findByPk(id);
       res.json(updatedProduct);
     } else {
-      res.status(404).send('Produto não encontrado!');
+      res.status(404).send("Produto não encontrado!");
     }
   } catch (error) {
     res.status(500).send(error.message);
@@ -83,18 +85,18 @@ exports.deleteProduct = async (req, res) => {
 // Função de busca pelo nome, código de barras ou categoria do produto
 exports.searchProducts = async (req, res) => {
   try {
-      const { search } = req.query; // Recebe o termo de busca da query string
-      const products = await Product.findAll({
-          where: {
-              [Op.or]: [
-                  { name: { [Op.like]: `%${search}%` } }, // Busca por nome
-                  { barcode: { [Op.eq]: search } }, // Busca por código de barras
-                  { category: { [Op.like]: `%${search}%` } } // Busca por categoria
-              ]
-          }
-      });
-      res.json(products); // Retorna a lista de produtos encontrados
+    const { search } = req.query;
+    const products = await Product.findAll({
+      where: {
+        [Op.or]: [
+          { name: { [Op.like]: `%${search}%` } },
+          { barcode: { [Op.eq]: search } },
+          { category: { [Op.like]: `%${search}%` } },
+        ],
+      },
+    });
+    res.json(products);
   } catch (error) {
-      res.status(500).send(error.message);
+    res.status(500).send(error.message);
   }
 };

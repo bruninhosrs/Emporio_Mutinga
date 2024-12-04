@@ -8,7 +8,8 @@ const UserController = require('../controllers/UserController');
 router.get('/', UserController.listAllUsers);
 router.post('/register', UserController.createUser);
 router.post('/login',  UserController.login);
-router.get('/details', authenticateToken, authorizeRole(['sub-gerente','gerente', 'super-admin']), UserController.getUserDetails); // Detalhes do usuário (necessário autenticação e ser 'gerente' ou 'super-admin')
+router.get('/:id', authenticateToken, authorizeRole(['sub-gerente', 'gerente', 'super-admin']), UserController.getUserById);
+router.get('/details', authenticateToken, authorizeRole(['sub-gerente','gerente', 'super-admin']), UserController.getUserDetails);
 router.put('/:id', authenticateToken, authorizeRole(['sub-gerente','gerente', 'super-admin']), UserController.updateUser);
 router.delete('/:id', authenticateToken, authorizeRole(['sub-gerente','gerente', 'super-admin']), UserController.deleteUser);
 

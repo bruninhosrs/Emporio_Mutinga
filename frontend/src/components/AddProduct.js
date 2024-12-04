@@ -1,84 +1,87 @@
-// AddProduct.js
-import React, { useState } from 'react';
-import axios from 'axios';
+import React, { useState } from "react";
+import axios from "axios";
+import "../css/AddProduct.css";
+import { useNavigate } from "react-router-dom";
 
-function AddProduct({ onAdd }) {
-  const [name, setName] = useState('');
-  const [price, setPrice] = useState('');
-  const [stock, setStock] = useState('');
-  const [description, setDescription] = useState('');
-  const [barcode, setBarcode] = useState('');
-  const [category, setCategory] = useState('');
+const AddProduct = () => {
+  const [name, setName] = useState("");
+  const [description, setDescription] = useState("");
+  const [price, setPrice] = useState("");
+  const [stock, setStock] = useState("");
+  const [message, setMessage] = useState("");
+  const navigate = useNavigate();
 
-  const handleAddProduct = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+
     try {
-      const token = localStorage.getItem('token'); // Busque o token JWT armazenado
-      const response = await axios.post('http://localhost:3000/products', {
-        name,
-        price: parseFloat(price),
-        stock: parseInt(stock, 10),
-        description,
-        barcode,
-        category,
-      }, {
-        headers: {
-          Authorization: `Bearer ${token}` // Inclui o token no cabeçalho
+      const token = localStorage.getItem("token");
+      await axios.post(
+        "http://localhost:3000/products",
+        { name, description, price: parseFloat(price), stock: parseInt(stock) },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
         }
-      });
-      console.log('Produto adicionado com sucesso:', response.data);
-      onAdd(); // Chama a função de callback para atualizar a lista de produtos
+      );
+      setMessage("Produto adicionado com sucesso!");
+      navigate("/products");
     } catch (error) {
-      console.error('Erro ao adicionar produto:', error);
+      console.error("Erro ao adicionar produto:", error);
+      setMessage("Erro ao adicionar o produto.");
     }
   };
 
   return (
-    <form onSubmit={handleAddProduct}>
-      <input 
-      type="text"
-      placeholder="Nome" 
-      value={name} 
-      onChange={(e) => setName(e.target.value)} required 
-      />
-      <input 
-      type="number" 
-      placeholder="Preço" 
-      value={price} onChange={(e) => 
-      setPrice(e.target.value)} required 
-      />
-      
-      <input 
-      type="number" 
-      placeholder="Estoque" 
-      value={stock} 
-      onChange={(e) => setStock(e.target.value)} required 
-      />
+    <div className="add-product">
+      <h1>Adicionar Produto</h1>
+      <form onSubmit={handleSubmit}>
+        <label>Nome do Produto</label>
+        <input
+          type="text"
+          value={name}
+          onChange={(e) => setName(e.target.value)}
+          required
+        />
 
-      <input
-       type="text" 
-       placeholder="Descrição" 
-       value={description} 
-       onChange={(e) => setDescription(e.target.value)} 
-       />
+        <label>Descrição</label>
+        <textarea
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          required
+        ></textarea>
 
-      <input 
-      type="text" 
-      placeholder="Código de Barras" 
-      value={barcode} 
-      onChange={(e) => setBarcode(e.target.value)} 
-      />
+        <label>Preço</label>
+        <input
+          type="number"
+          value={price}
+          onChange={(e) => setPrice(e.target.value)}
+          required
+          min="0"
+          step="0.01"
+        />
 
-      <input 
-      type="text" 
-      placeholder="Categoria" 
-      value={category} 
-      onChange={(e) => setCategory(e.target.value)} 
-      />
-      
-      <button type="submit">Adicionar Produto</button>
-    </form>
+        <label>Estoque</label>
+        <input
+          type="number"
+          value={stock}
+          onChange={(e) => setStock(e.target.value)}
+          required
+          min="0"
+        />
+
+        <button type="submit">Salvar Produto</button>
+        {message && <p className="message">{message}</p>}
+        <button
+          onClick={() => navigate("/products")}
+          className="backhome-button"
+        >
+          Voltar
+        </button>
+      </form>
+    </div>
   );
-}
+};
 
 export default AddProduct;

@@ -1,71 +1,74 @@
 // Criação de Relatório do Caixa
-const { Model, DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+const { Model, DataTypes } = require("sequelize");
+const sequelize = require("../config/database");
 
 class CashRegister extends Model {}
 
-CashRegister.init({
+CashRegister.init(
+  {
     registerNumber: {
-        type: DataTypes.INTEGER,
-        primaryKey: true,  // Definindo como chave primária
-        autoIncrement: true
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
     },
     openingBalance: {
-        type: DataTypes.DECIMAL(10, 2),
-        allowNull: false,
-        defaultValue: 0.00
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: false,
+      defaultValue: 0.0,
     },
     closingBalance: {
-        type: DataTypes.DECIMAL(10, 2),
-        allowNull: true
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: true,
     },
     totalCashSales: {
-        type: DataTypes.DECIMAL(10, 2),
-        allowNull: false,
-        defaultValue: 0.00
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: false,
+      defaultValue: 0.0,
     },
     totalPixSales: {
-        type: DataTypes.DECIMAL(10, 2),
-        allowNull: false,
-        defaultValue: 0.00
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: false,
+      defaultValue: 0.0,
     },
     totalDebitSales: {
-        type: DataTypes.DECIMAL(10, 2),
-        allowNull: false,
-        defaultValue: 0.00
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: false,
+      defaultValue: 0.0,
     },
     totalCreditSales: {
-        type: DataTypes.DECIMAL(10, 2),
-        allowNull: false,
-        defaultValue: 0.00
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: false,
+      defaultValue: 0.0,
     },
     totalVoucherSales: {
-        type: DataTypes.DECIMAL(10, 2),
-        allowNull: false,
-        defaultValue: 0.00
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: false,
+      defaultValue: 0.0,
     },
     totalWithdrawals: {
-        type: DataTypes.DECIMAL(10, 2),
-        allowNull: false,
-        defaultValue: 0.00
+      type: DataTypes.DECIMAL(10, 2),
+      allowNull: false,
+      defaultValue: 0.0,
     },
     status: {
-        type: DataTypes.ENUM('aberto', 'fechado'),
-        allowNull: false,
-        defaultValue: 'aberto'
+      type: DataTypes.ENUM("aberto", "fechado"),
+      allowNull: false,
+      defaultValue: "aberto",
     },
     createdAt: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW, 
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
     },
     updatedAt: {
-        type: DataTypes.DATE,
-        defaultValue: DataTypes.NOW, 
-    }
-}, {
+      type: DataTypes.DATE,
+      defaultValue: DataTypes.NOW,
+    },
+  },
+  {
     sequelize,
-    modelName: 'cashRegister',
-    timestamps: true
-});
+    modelName: "cashRegister",
+    timestamps: true,
+  }
+);
 
 module.exports = CashRegister;

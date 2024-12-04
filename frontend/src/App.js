@@ -4,13 +4,14 @@ import PrivateRoute from './components/PrivateRoute';
 import Login from '../src/pages/Login';
 import Home from './pages/Home';
 import Dashboard from '../src/pages/Dashboard';
+
 // Usuário
 import User from './pages/User';
 import AddUser from '../src/components/AddUser';
 import EditUser from '../src/components/EditUser';
 
 // Produto
-import Products from '../src/pages/Products';
+import ProductList from '../src/pages/ProductList';
 import AddProduct from '../src/components/AddProduct';
 import EditProduct from '../src/components/EditProduct';
 
@@ -37,12 +38,12 @@ const RedirectToLogin = () => {
 
   useEffect(() => {
       const token = localStorage.getItem('token');
-      // Verifica se o token existe e não está vazio
+      
       if (!token || token === 'undefined' || token === null) {
-          // Redireciona para login se não houver token válido
+          
           navigate('/login');
       } else {
-          // Se o token existir, redireciona para a home
+      
           navigate('/home');
       }
   }, [navigate]);
@@ -60,19 +61,28 @@ function App() {
         <Route path="/home" element={<Home />} />
         <Route path="/dashboard" element={<PrivateRoute><Dashboard /></PrivateRoute>} />
         <Route path="/caixa" element={<PrivateRoute><CashRegisterInterface /></PrivateRoute>} />
-        <Route path="/products" element={<PrivateRoute><Products /></PrivateRoute>} />
-        <Route path="/products/add" element={<PrivateRoute><AddProduct /></PrivateRoute>} />
-        <Route path="/products/edit/:id" element={<PrivateRoute><EditProduct /></PrivateRoute>} />
-        <Route path='/orders' element= {<PrivateRoute><Orders /></PrivateRoute>}/>
-        <Route path="/orders/add" element={<PrivateRoute><AddOrder /></PrivateRoute>} />
-        <Route path="/orders/edit/:id" element={<PrivateRoute><EditOrder /></PrivateRoute>} />
-        <Route path="/clients" element={<PrivateRoute><Clients /></PrivateRoute>}/>
-        <Route path="/clients/add" element={<PrivateRoute><AddClient /></PrivateRoute>}/>
-        <Route path="/clients/edit/:id" element={<PrivateRoute><EditClient /></PrivateRoute>}/>
-        <Route path="/suppliers" element={<PrivateRoute><Suppliers /></PrivateRoute>}/>
-        <Route path="/suppliers/add" element={<PrivateRoute><AddSupplier /></PrivateRoute>}/>
-        <Route path="/suppliers/edit/:id" element={<PrivateRoute><EditSupplier /></PrivateRoute>}/>
 
+        {/* PRODUTO */}
+        <Route path="/products" element={<PrivateRoute><ProductList /></PrivateRoute>} />
+        <Route path="/add-product" element={<PrivateRoute><AddProduct /></PrivateRoute>} />
+        <Route path="/edit-product/:id" element={<PrivateRoute><EditProduct /></PrivateRoute>} />
+
+        {/* PEDIDO */}
+        <Route path='/orders' element= {<PrivateRoute><Orders /></PrivateRoute>}/>
+        <Route path="/add-order" element={<PrivateRoute><AddOrder /></PrivateRoute>} />
+        <Route path="/edit-order/:id" element={<PrivateRoute><EditOrder /></PrivateRoute>} />
+
+        {/* CLIENTE */}
+        <Route path="/clients" element={<PrivateRoute><Clients /></PrivateRoute>}/>
+        <Route path="/add-client" element={<PrivateRoute><AddClient /></PrivateRoute>}/>
+        <Route path="/edit-client/:id" element={<PrivateRoute><EditClient /></PrivateRoute>}/>
+
+        {/* FORNECEDOR */}
+        <Route path="/suppliers" element={<PrivateRoute><Suppliers /></PrivateRoute>}/>
+        <Route path="/add-supplier" element={<PrivateRoute><AddSupplier /></PrivateRoute>}/>
+        <Route path="/edit-supplier/:id" element={<PrivateRoute><EditSupplier /></PrivateRoute>}/>
+
+        {/* USUARIO */}
         <Route path="/users" element={<PrivateRoute><User /></PrivateRoute>}/>
         <Route path="/users/add" element={<PrivateRoute><AddUser /></PrivateRoute>}/>
         <Route path="/users/edit/:id" element={<PrivateRoute><EditUser /></PrivateRoute>}/>

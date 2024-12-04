@@ -1,8 +1,8 @@
-// Arquivo usado apenas os login de usuário!
+// Arquivo usado apenas os login de usuário
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
 
-const secretKey = 'your_secret_key_here'; // Use uma chave secreta forte e guarde-a segura, preferencialmente em variáveis de ambiente.
+const secretKey = 'your_secret_key_here';
 
 // Gerar token JWT
 exports.generateToken = (user) => {
@@ -14,10 +14,8 @@ exports.generateToken = (user) => {
 exports.hashPassword = async (password) => {
   return await bcrypt.hash(password, 10);
 };
-// Esta função usa bcrypt para hashear senhas antes de armazená-las no banco de dados. O "10" é o número de rounds de salting.
 
 // Verificar senha
 exports.comparePassword = async (password, hash) => {
   return await bcrypt.compare(password, hash);
 };
-// Esta função verifica se a senha fornecida, quando hasheada, corresponde ao hash armazenado.

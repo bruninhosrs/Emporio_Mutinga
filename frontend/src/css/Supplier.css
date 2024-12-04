@@ -1,0 +1,56 @@
+.supplier-list-container {
+    background-color: #f0f0f0;
+    padding: 20px;
+    text-align: center;
+}
+
+.supplier-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.supplier-table th, .supplier-table td {
+    padding: 12px;
+    border: 1px solid #ccc;
+    text-align: left;
+}
+
+.supplier-table tr:hover {
+    background-color: #e0e0e0;
+}
+
+.selected {
+    background-color: #d0f0c0; 
+}
+
+.button-container {
+    margin-top: 20px;
+}
+
+button {
+    margin: 0 10px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.back-button {
+    background-color: transparent;
+    font-size: 24px;
+}
+
+.add-button {
+    background-color: #4CAF50; 
+    color: white;
+}
+
+.edit-button {
+    background-color: #FFEB3B; 
+    color: black;
+}
+
+.delete-button {
+    background-color: #F44336; 
+    color: white;
+}

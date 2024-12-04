@@ -1,91 +1,116 @@
-import React, { useState } from 'react';
-import axios from 'axios';
-import { useNavigate } from 'react-router-dom'; // Adicionei o useNavigate
+import React, { useState, useEffect } from "react";
+import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import "../css/Order.css";
 
-function AddOrder() {
-  const [quantity, setQuantity] = useState('');
-  const [status, setStatus] = useState('pendente');
-  const [productId, setProductId] = useState(''); // Relacionado ao produto
-  const [userId, setUserId] = useState(''); // Relacionado ao usuário
-  const [errorMessage, setErrorMessage] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
-  const token = localStorage.getItem('token'); // Pegando o token do localStorage
-  const navigate = useNavigate(); // Inicialize o navigate
+const AddOrder = () => {
+  const [products, setProducts] = useState([]);
+  const [productId, setProductId] = useState("");
+  const [quantity, setQuantity] = useState(1);
+  const [status, setStatus] = useState("Pendente");
+  const [date, setDate] = useState(new Date().toISOString().slice(0, 10));
+  const [message, setMessage] = useState("");
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    
+    // Carregar os produtos disponíveis para selecionar ao criar um pedido
+    const fetchProducts = async () => {
+      try {
+        const response = await axios.get("http://localhost:3000/products");
+        setProducts(response.data);
+      } catch (error) {
+        console.error("Erro ao buscar produtos:", error);
+      }
+    };
+    fetchProducts();
+  }, []);
 
   const handleAddOrder = async (e) => {
     e.preventDefault();
-    
-    // Validação básica
-    if (!quantity || parseInt(quantity) <= 0 || !productId || !userId) {
-      setErrorMessage('Preencha todos os campos corretamente.');
-      return;
-    }
-
     try {
-      const response = await axios.post('http://localhost:3000/orders', {
-        quantity: parseInt(quantity),
-        status,
+      await axios.post("http://localhost:3000/orders", {
         productId,
-        userId
-      }, {
-        headers: {
-          Authorization: `Bearer ${token}` // Autorização com token JWT
-        }
+        quantity,
+        status,
+        date,
       });
-      setSuccessMessage('Pedido adicionado com sucesso!');
-      setErrorMessage('');
-      
-      // Redireciona para a tela de pedidos após 1 segundo
-      setTimeout(() => {
-        navigate('/orders');
-      }, 1000);
-      
+      setMessage("Pedido adicionado com sucesso!");
+      setTimeout(() => navigate("/orders"), 2000);
     } catch (error) {
-      console.error('Erro ao adicionar pedido:', error);
-      setErrorMessage('Erro ao adicionar o pedido. Tente novamente.');
-      setSuccessMessage('');
+      console.error("Erro ao adicionar pedido:", error);
+      setMessage("Erro ao adicionar pedido.");
     }
   };
 
+  const handleCancel = () => {
+    navigate("/orders");
+  };
+
   return (
-    <form onSubmit={handleAddOrder}>
-      {errorMessage && <p className="error-message">{errorMessage}</p>}
-      {successMessage && <p className="success-message">{successMessage}</p>}
-      
-      <input 
-        type="number" 
-        placeholder="Quantidade" 
-        value={quantity} 
-        onChange={(e) => setQuantity(e.target.value)} 
-        required 
-        min="1"
-      />
-      
-      <select value={status} onChange={(e) => setStatus(e.target.value)}>
-        <option value="pendente">Pendente</option>
-        <option value="concluída">Concluída</option>
-        <option value="cancelada">Cancelada</option>
-      </select>
+    <div className="add-order">
+      <h1>Adicionar Novo Pedido</h1>
+      <form onSubmit={handleAddOrder}>
+        <div className="form-group">
+          <label>Produto</label>
+          <select
+            value={productId}
+            onChange={(e) => setProductId(e.target.value)}
+            required
+          >
+            <option value="">Selecione um Produto</option>
+            {products.map((product) => (
+              <option key={product.id} value={product.id}>
+                {product.name} - R${product.price}
+              </option>
+            ))}
+          </select>
+        </div>
 
-      <input 
-        type="text" 
-        placeholder="ID do Produto" 
-        value={productId} 
-        onChange={(e) => setProductId(e.target.value)} 
-        required 
-      />
+        <div className="form-group">
+          <label>Quantidade</label>
+          <input
+            type="number"
+            value={quantity}
+            onChange={(e) => setQuantity(e.target.value)}
+            min="1"
+            required
+          />
+        </div>
 
-      <input 
-        type="text" 
-        placeholder="ID do Usuário" 
-        value={userId} 
-        onChange={(e) => setUserId(e.target.value)} 
-        required 
-      />
-      
-      <button type="submit">Adicionar Pedido</button>
-    </form>
+        <div className="form-group">
+          <label>Status</label>
+          <select
+            value={status}
+            onChange={(e) => setStatus(e.target.value)}
+            required
+          >
+            <option value="Pendente">Pendente</option>
+            <option value="Em Andamento">Em Andamento</option>
+            <option value="Concluído">Concluído</option>
+          </select>
+        </div>
+
+        <div className="form-group">
+          <label>Data</label>
+          <input
+            type="date"
+            value={date}
+            onChange={(e) => setDate(e.target.value)}
+            required
+          />
+        </div>
+
+        <button type="submit" className="submit-button">
+          Adicionar Pedido
+        </button>
+        <button type="button" className="cancel-button" onClick={handleCancel}>
+          Voltar
+        </button>
+      </form>
+      <p>{message}</p>
+    </div>
   );
-}
+};
 
 export default AddOrder;
