@@ -6,23 +6,25 @@ import "../css/Supplier.css";
 const Suppliers = () => {
   const [suppliers, setSuppliers] = useState([]);
   const [selectedSupplier, setSelectedSupplier] = useState(null);
+  const [message, setMessage] = useState("");
   const navigate = useNavigate();
 
-  // Função para carregar a lista de fornecedores do banco
   useEffect(() => {
-    const fetchSuppliers = async () => {
-      try {
-        const response = await axios.get("http://localhost:3000/suppliers");
-        setSuppliers(response.data);
-      } catch (error) {
-        console.error("Erro ao buscar fornecedores:", error);
-      }
-    };
     fetchSuppliers();
   }, []);
 
-  // Funções para os botões
+  const fetchSuppliers = async () => {
+    try {
+      const response = await axios.get("http://localhost:3000/suppliers");
+      setSuppliers(response.data);
+    } catch (error) {
+      setMessage("Erro ao buscar fornecedores.");
+      console.error(error);
+    }
+  };
+
   const handleAdd = () => navigate("/add-supplier");
+
   const handleEdit = () => {
     if (selectedSupplier) {
       navigate(`/edit-supplier/${selectedSupplier.id}`);
@@ -30,23 +32,42 @@ const Suppliers = () => {
       alert("Selecione um fornecedor para editar.");
     }
   };
+
+  // Função para deletar um cliente
   const handleDelete = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      console.error("Erro: Token de autenticação não encontrado.");
+      alert("Erro: Token de autenticação não encontrado.");
+      return;
+    }
+
+    // Verifica se há um fornecedor selecionado
     if (selectedSupplier) {
       try {
-        await axios.delete(
-          `http://localhost:3000/suppliers/${selectedSupplier.id}`
+        await axios.delete(`http://localhost:3000/suppliers/${selectedSupplier.id}`,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
         );
-        setSuppliers(
-          suppliers.filter((supplier) => supplier.id !== selectedSupplier.id)
-        );
+
+        await fetchSuppliers();
         setSelectedSupplier(null);
+        alert("Fornecedor deletado com sucesso.");
       } catch (error) {
-        console.error("Erro ao deletar fornecedor:", error);
+        if (error.response && error.response.status === 401) {
+          console.error("Erro: Token inválido ou não autorizado.");
+          alert("Erro: Token inválido ou não autorizado.");
+        } else {
+          console.error("Erro ao deletar fornecedor:", error);
+          alert("Erro ao deletar fornecedor.");
+        }
       }
     } else {
-      alert("Selecione um fornecedor para deletar.");
+      alert("Erro: Nenhum fornecedor selecionado.");
     }
   };
+
   const handleBackToHome = () => navigate("/dashboard");
 
   return (

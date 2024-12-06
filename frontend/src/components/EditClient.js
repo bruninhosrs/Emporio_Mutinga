@@ -35,7 +35,7 @@ const EditClient = () => {
         setFormData(response.data);
       } catch (error) {
         console.error("Erro ao carregar dados do cliente:", error);
-        setMessage("Erro ao carregar dados do cliente.");
+        alert("Erro ao carregar dados do cliente.");
       }
     };
     fetchClientData();
@@ -56,11 +56,11 @@ const EditClient = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      setMessage("Cliente atualizado com sucesso!");
+      alert("Cliente atualizado com sucesso!");
       setTimeout(() => navigate("/clients"), 1500);
     } catch (error) {
       console.error("Erro ao atualizar cliente:", error);
-      setMessage("Erro ao atualizar cliente.");
+      alert("Erro ao atualizar cliente.");
     }
   };
 
